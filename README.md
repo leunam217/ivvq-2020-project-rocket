@@ -31,7 +31,7 @@ $
 ### Docker
 Pour installer et deployer l'application dans un dans un conteneur Docker.
 ```sh
- commande docker à mettre pour build l'image
+// commande docker à mettre pour build l'image
 ```
 
 
