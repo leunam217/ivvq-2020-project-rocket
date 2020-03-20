@@ -1,0 +1,13 @@
+package com.teamrocket.projetdevop.ivvqproject;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class IvvqProjectApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(IvvqProjectApplication.class, args);
+	}
+
+}
