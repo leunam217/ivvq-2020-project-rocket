@@ -6,8 +6,6 @@ Application de commerce électronique développée pour effectuer des opération
 
 ### Tech
 
-Dillinger uses a number of open source projects to work properly:
-
 * Vue JS
 * SpringBoot 
 * PostGreSQL
