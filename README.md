@@ -41,3 +41,5 @@ Pour installer et deployer l'application dans un dans un conteneur Docker.
  - //
 
 
+### Git Workflow
+
