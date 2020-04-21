@@ -19,7 +19,7 @@ services:
     build:
       context: .
       args:
-        - appversion:"0.0.1-SNAPSHOT"
+        - appversion=0.0.1-SNAPSHOT
     container_name: myApp
     restart: always
     expose:
