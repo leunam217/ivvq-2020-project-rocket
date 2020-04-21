@@ -1,10 +1,12 @@
+ARG appversion
+
 # Builder
 FROM maven:3-jdk-8 AS builder
 WORKDIR /app
 COPY back/pom.xml .
 RUN mvn dependency:go-offline -B
 COPY back/src src
-RUN mvn package && cp /app/target/ivvq-project-0.0.1-SNAPSHOT.jar ./myApp.jar
+RUN mvn package -DskipTests && cp /app/target/ivvq-project-$appversion.jar ./myApp.jar
 
 # Runtime
 FROM openjdk:8-jre-alpine

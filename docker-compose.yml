@@ -6,14 +6,24 @@ services:
     image: postgres:latest
     container_name: postgres
     restart: always
+    expose:
+      - 5432
     ports:
       - 5432:5432
     environment:
-      POSTGRES_PASS: xxxxx
-      POSTGRES_USER: xxxxx
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 
+      POSTGRES_DB: 
 
   java-app:
-    build: .
+    build:
+      context: .
+      args:
+        - appversion:"0.0.1-SNAPSHOT"
+    container_name: myApp
+    restart: always
+    expose:
+      - 8080
     depends_on: 
       - postgresdb
     ports:
