@@ -42,6 +42,8 @@ public class Product{
    @Min(value = 0, message = "a stock cannot be negative")
     private Integer productStock;
 
+   private String productImage;
+
    @Min(value = 1)
     private Integer count;
 
@@ -93,6 +95,14 @@ public class Product{
         this.count = count;
     }
 
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -103,12 +113,13 @@ public class Product{
                 productDescription.equals(product.productDescription) &&
                 productPrice.equals(product.productPrice) &&
                 Objects.equals(productStock, product.productStock) &&
-                count.equals(product.count);
+                count.equals(product.count) &&
+                productImage.equals(product.productImage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, productName, productDescription, productPrice, productStock, count);
+        return Objects.hash(id, productName, productDescription, productPrice, productStock, count, productImage);
     }
 
     @Override
@@ -119,6 +130,7 @@ public class Product{
                 ", productDescription='" + productDescription + '\'' +
                 ", productPrice=" + productPrice +
                 ", productStock=" + productStock +
+                ", productImage='" + productImage + '\'' +
                 ", count=" + count +
                 '}';
     }
