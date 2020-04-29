@@ -1,16 +1,27 @@
 package com.teamrocket.projetdevop.ivvqproject.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-public class ShoppingCart {
+public class ShoppingCart implements Serializable {
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Product> products = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -20,5 +31,22 @@ public class ShoppingCart {
         this.id = id;
     }
 
-    // to do
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
+    @Override
+    public String toString() {
+        return "ShoppingCart{" +
+                "id=" + id +
+                ", products=" + products +
+                '}';
+    }
+    public ShoppingCart() {}
+
+    public ShoppingCart(User user) { this.user = user;}
 }
