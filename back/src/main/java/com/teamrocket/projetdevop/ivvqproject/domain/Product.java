@@ -12,9 +12,10 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-public class Product{
+public class Product implements Serializable{
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
