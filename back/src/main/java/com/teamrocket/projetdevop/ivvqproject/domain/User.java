@@ -16,6 +16,10 @@ public class User implements Serializable {
 
     @NotEmpty
     private String email;
+
+    @NotEmpty
+    private String password;
+
     @NotEmpty
     private String name;
     @NotEmpty
@@ -92,6 +96,7 @@ public class User implements Serializable {
         return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
