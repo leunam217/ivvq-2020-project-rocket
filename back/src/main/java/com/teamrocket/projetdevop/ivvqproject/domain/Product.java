@@ -104,6 +104,22 @@ public class Product implements Serializable{
         this.productImage = productImage;
     }
 
+    public ShoppingCart getCart() {
+        return cart;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public void setCart(ShoppingCart cart) {
+        this.cart = cart;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

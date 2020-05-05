@@ -20,7 +20,6 @@ public class UserServiceImpl {
     @Autowired
     ShoppingCartRepository shoppingCartRepository;
 
-
     /**
      * method to find one user
      * @param userId
