@@ -40,20 +40,6 @@ public class ShoppingCartServiceImpl {
        });
     }
 
-    /**
-     * method to check out cart
-     * @param user
-     */
-    public void checkoutCart(User user) {
-        Order order = new Order(user);
-        orderRepository.save(order);
-        user.getCart().getProducts().forEach(product -> {
-            product.setCart(null);
-            product.setOrder(order);
 
-            productService.decreaseProductStock(product.getId(), product.getCount());
-            productService.saveProduct(product);
-        });
-    }
 
 }
