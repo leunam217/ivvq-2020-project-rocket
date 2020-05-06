@@ -1,17 +1,20 @@
 package com.teamrocket.projetdevop.ivvqproject.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 
-@Entity
+@Entity(name = "global_user")
 public class User implements Serializable {
+
+    private static final long serialVersionUID = -2343243243242432341L;
+
     @Id
-    @NotNull
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotEmpty
@@ -32,7 +35,7 @@ public class User implements Serializable {
     @JsonIgnore
     private ShoppingCart cart;
 
-    @NotEmpty
+   @NotEmpty
     private String role = "CUSTOMER";
 
     public Long getId() {
@@ -75,7 +78,7 @@ public class User implements Serializable {
         this.address = address;
     }
 
-    public String getRole() {
+   public String getRole() {
         return role;
     }
 
@@ -90,6 +93,19 @@ public class User implements Serializable {
     public void setCart(ShoppingCart cart) {
         this.cart = cart;
     }
+
+    public User(String nom, String email, String password, String address, String phoneNumber, String role)
+    {
+
+        this.name = nom;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+    }
+
+    public User(){}
 
     @Override
     public String toString() {
