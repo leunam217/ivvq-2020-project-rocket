@@ -11,11 +11,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-@Entity
-public class Product{
+@Entity(name = "product")
+public class Product implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -31,7 +31,6 @@ public class Product{
     private String productName;
 
     @NotNull(message = "is required")
-    @Min(value = 3,  message = "give at least a short description of the product")
     private String productDescription;
 
     @NotNull(message = "provide a valid price")
@@ -101,6 +100,22 @@ public class Product{
 
     public void setProductImage(String productImage) {
         this.productImage = productImage;
+    }
+
+    public ShoppingCart getCart() {
+        return cart;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public void setCart(ShoppingCart cart) {
+        this.cart = cart;
     }
 
     @Override

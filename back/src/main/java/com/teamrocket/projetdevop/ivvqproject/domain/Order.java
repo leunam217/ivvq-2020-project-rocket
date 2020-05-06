@@ -12,12 +12,11 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+@Entity(name = "order")
 public class Order implements Serializable {
 
     @Id
-    @NotNull
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -56,10 +55,10 @@ public class Order implements Serializable {
         this.id = id;
     }
 
-
     public Order() {}
 
     public Order(User buyer) {
+
         this.buyerEmail = buyer.getEmail();
         this.buyerName = buyer.getName();
         this.buyerAddress = buyer.getAddress();
