@@ -11,12 +11,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-@Entity
+@Entity(name = "product")
 public class Product implements Serializable{
 
     @Id
-    @NotNull
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -32,7 +31,6 @@ public class Product implements Serializable{
     private String productName;
 
     @NotNull(message = "is required")
-    @Min(value = 3,  message = "give at least a short description of the product")
     private String productDescription;
 
     @NotNull(message = "provide a valid price")
