@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +31,7 @@ public class OrderServiceImpl {
      * @param orderId
      * @return
      */
+
     public Order findOne(Long orderId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         Order order = optionalOrder.get();
@@ -47,9 +47,10 @@ public class OrderServiceImpl {
      * get all orders
      * @return
      */
+
     public Page<Order> getAllOrder(Pageable pageable)
     {
-        return orderRepository.findAllByBuyerNameOrBuyerEmail( pageable);
+        return orderRepository.findAll(pageable);
     }
 
 }

@@ -22,6 +22,7 @@ public class ProductServiceImpl {
      * @param productId
      * @return
      */
+
     public Product findOneProductById(Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
         Product product = optionalProduct.get();
@@ -33,6 +34,7 @@ public class ProductServiceImpl {
      * @param pageable
      * @return
      */
+
     public Page<Product> findAllProduct(Pageable pageable) {
         return productRepository.findAllByOrderById(pageable);
     }
@@ -43,6 +45,8 @@ public class ProductServiceImpl {
      * @param amount
      * @throws Exception
      */
+
+
     public void increaseProductStock(Long productId, int amount)  {
 
         Product product = findOneProductById(productId);
@@ -66,6 +70,8 @@ public class ProductServiceImpl {
      * @param amount
      * @throws Exception
      */
+
+
     public void decreaseProductStock(Long productId, int amount)  {
         Product product = findOneProductById(productId);
         if (product == null) {
@@ -86,6 +92,7 @@ public class ProductServiceImpl {
      * @param product
      * @return
      */
+
     public Product saveProduct(Product product) {
         if (product == null)
         {
@@ -98,6 +105,7 @@ public class ProductServiceImpl {
      * method to delete one selected product
      * @param productId
      */
+
     public void deleteProduct(Long productId) {
 
         Product product = findOneProductById(productId);

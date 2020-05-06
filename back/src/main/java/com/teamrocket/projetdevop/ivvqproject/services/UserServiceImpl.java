@@ -45,17 +45,15 @@ public class UserServiceImpl {
      * @param user
      * @return
      */
+
     public User saveUser(User user) {
-        try {
+
             User saveUser = userRepository.save(user);
 
             ShoppingCart shoppingCart = shoppingCartRepository.save(new ShoppingCart(saveUser));
             saveUser.setCart(shoppingCart);
+
             return userRepository.save(saveUser);
-        } catch (Exception e)
-        {
-            throw new IllegalArgumentException("Error");
-        }
     }
 
     /**

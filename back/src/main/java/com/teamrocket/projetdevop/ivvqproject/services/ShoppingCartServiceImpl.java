@@ -32,6 +32,7 @@ public class ShoppingCartServiceImpl {
      * @param productId
      * @param user
      */
+
     public void deleteCart(Long productId, User user) {
         Optional<Product> product = user.getCart().getProducts().stream().filter(e -> productId.equals(e.getId())).findFirst();
         product.ifPresent(product1 -> {
