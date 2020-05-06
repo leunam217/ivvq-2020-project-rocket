@@ -7,8 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.print.attribute.standard.PrinterURI;
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service

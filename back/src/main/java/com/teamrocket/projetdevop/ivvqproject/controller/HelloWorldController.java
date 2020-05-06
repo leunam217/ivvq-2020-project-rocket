@@ -1,4 +1,4 @@
-package com.teamrocket.projetdevop.ivvqproject.controllers;
+package com.teamrocket.projetdevop.ivvqproject.controller;
 
 import com.teamrocket.projetdevop.ivvqproject.domain.Product;
 
