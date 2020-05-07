@@ -1,21 +1,25 @@
 package com.teamrocket.projetdevop.ivvqproject.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
+
+@Data
 @Entity
 public class Product{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -31,7 +35,6 @@ public class Product{
     private String productName;
 
     @NotNull(message = "is required")
-    @Min(value = 3,  message = "give at least a short description of the product")
     private String productDescription;
 
     @NotNull(message = "provide a valid price")
@@ -40,7 +43,7 @@ public class Product{
 
    @NotNull(message = "provide a valid quantity of stock")
    @Min(value = 0, message = "a stock cannot be negative")
-    private Integer productStock;
+   private Integer productStock;
 
    private String productImage;
 
@@ -103,6 +106,22 @@ public class Product{
         this.productImage = productImage;
     }
 
+    public ShoppingCart getCart() {
+        return cart;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public void setCart(ShoppingCart cart) {
+        this.cart = cart;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -137,12 +156,5 @@ public class Product{
 
     public Product() {}
 
-    public Product(String productName, String productDescription, BigDecimal productPrice, Integer productStock, Integer quantity)
-    {
-        this.productName = productName;
-        this.productDescription = productDescription;
-        this.productPrice = productPrice;
-        this.productStock = productStock;
-        this.count = quantity;
-    }
+
 }
