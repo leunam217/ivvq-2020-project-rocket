@@ -1,18 +1,22 @@
 package com.teamrocket.projetdevop.ivvqproject.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
-@Entity(name = "product")
-public class Product implements Serializable{
+
+@Data
+@Entity
+public class Product{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +43,7 @@ public class Product implements Serializable{
 
    @NotNull(message = "provide a valid quantity of stock")
    @Min(value = 0, message = "a stock cannot be negative")
-    private Integer productStock;
+   private Integer productStock;
 
    private String productImage;
 
@@ -152,12 +156,5 @@ public class Product implements Serializable{
 
     public Product() {}
 
-    public Product(String productName, String productDescription, BigDecimal productPrice, Integer productStock, Integer quantity)
-    {
-        this.productName = productName;
-        this.productDescription = productDescription;
-        this.productPrice = productPrice;
-        this.productStock = productStock;
-        this.count = quantity;
-    }
+
 }

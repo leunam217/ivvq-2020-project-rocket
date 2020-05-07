@@ -3,11 +3,15 @@ package com.teamrocket.projetdevop.ivvqproject.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 import java.io.Serializable;
 
+
+@Data
 @Entity(name = "global_user")
 public class User implements Serializable {
 
@@ -92,17 +96,6 @@ public class User implements Serializable {
 
     public void setCart(ShoppingCart cart) {
         this.cart = cart;
-    }
-
-    public User(String nom, String email, String password, String address, String phoneNumber, String role)
-    {
-
-        this.name = nom;
-        this.email = email;
-        this.password = password;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
     }
 
     public User(){}

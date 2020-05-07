@@ -5,13 +5,17 @@ import com.teamrocket.projetdevop.ivvqproject.domain.User;
 import com.teamrocket.projetdevop.ivvqproject.repositories.ShoppingCartRepository;
 import com.teamrocket.projetdevop.ivvqproject.repositories.UserRepository;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl {
 
     @Autowired
@@ -61,7 +65,7 @@ public class UserServiceImpl {
      * @param user
      * @return
      */
-    public User updateUser(User user) {
+   public User updateUser(User user) {
         Optional<User> oldUser = userRepository.findById(user.getId());
         User oldUser1 = oldUser.get();
         oldUser1.setName(user.getName());
