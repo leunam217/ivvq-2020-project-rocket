@@ -24,31 +24,16 @@ public class UserServiceImpl {
     @Autowired
     ShoppingCartRepository shoppingCartRepository;
 
-    /**
-     * method to find one user
-     * @param userId
-     * @return
-     */
-    public User findOneUser(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        User userFinal = user.get();
-        return userFinal;
+
+    public User findOneUser(String userEmail) {
+
+        return userRepository.findByEmail(userEmail);
     }
 
-    /**
-     * method to find user's role
-     * @param role
-     * @return
-     */
+
     public Collection<User> findByRole(String role) {
         return userRepository.findAllByRole(role);
     }
-
-    /**
-     * method to save user
-     * @param user
-     * @return
-     */
 
     public User saveUser(User user) {
 
@@ -60,20 +45,15 @@ public class UserServiceImpl {
             return userRepository.save(saveUser);
     }
 
-    /**
-     * method to update user informations
-     * @param user
-     * @return
-     */
-   public User updateUser(User user) {
-        Optional<User> oldUser = userRepository.findById(user.getId());
-        User oldUser1 = oldUser.get();
-        oldUser1.setName(user.getName());
-        oldUser1.setEmail(user.getEmail());
-        oldUser1.setAddress(user.getAddress());
-        oldUser1.setPhoneNumber(user.getPhoneNumber());
 
-        return userRepository.save(oldUser1);
+   public User updateUser(User user) {
+        User oldUser = userRepository.findByEmail(user.getEmail());
+       oldUser.setName(user.getName());
+       oldUser.setEmail(user.getEmail());
+       oldUser.setAddress(user.getAddress());
+       oldUser.setPhoneNumber(user.getPhoneNumber());
+
+        return userRepository.save(oldUser);
     }
 
 }

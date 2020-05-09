@@ -9,6 +9,7 @@ import java.util.Collection;
 
 @Repository
 @Transactional
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, String> {
+    User findByEmail(String email);
     Collection<User> findAllByRole(String role);
 }

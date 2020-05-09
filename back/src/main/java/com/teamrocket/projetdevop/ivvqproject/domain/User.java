@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 
 @Data
-@Entity(name = "global_user")
+@Entity(name = "users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = -2343243243242432341L;
