@@ -18,4 +18,4 @@ RUN mvn package -DskipTests && cp /app/target/ivvq-project-$appversion.jar ./myA
 FROM openjdk:8-jre-alpine
 WORKDIR /app
 COPY --from=builder /app/myApp.jar ./myApp.jar
-ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -Dspring.datasource.url=$DATABASE_URL -jar ./myApp.jar"]
+ENTRYPOINT ["java -Djava.security.egd=file:/dev/./urandom -jar ./myApp.jar"]
