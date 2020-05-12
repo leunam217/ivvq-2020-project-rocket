@@ -1,20 +1,16 @@
-package me.zhulin.shopapi.service.impl;
+package com.teamrocket.projetdevop.ivvqproject.service.impl;
 
 
-import me.zhulin.shopapi.entity.Cart;
-import me.zhulin.shopapi.entity.User;
-import me.zhulin.shopapi.enums.ResultEnum;
-import me.zhulin.shopapi.exception.MyException;
-import me.zhulin.shopapi.repository.CartRepository;
-import me.zhulin.shopapi.repository.UserRepository;
-import me.zhulin.shopapi.service.UserService;
+import com.teamrocket.projetdevop.ivvqproject.domain.ShoppingCart;
+import com.teamrocket.projetdevop.ivvqproject.domain.User;
+import com.teamrocket.projetdevop.ivvqproject.repositories.ShoppingCartRepository;
+import com.teamrocket.projetdevop.ivvqproject.repositories.UserRepository;
+import com.teamrocket.projetdevop.ivvqproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
 
 
 @Service
@@ -25,17 +21,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    CartRepository cartRepository;
+    ShoppingCartRepository cartRepository;
 
     @Override
     public User findOne(String email) {
         return userRepository.findByEmail(email);
     }
 
-    @Override
-    public Collection<User> findByRole(String role) {
-        return userRepository.findAllByRole(role);
-    }
 
     @Override
     @Transactional
@@ -46,12 +38,12 @@ public class UserServiceImpl implements UserService {
             User savedUser = userRepository.save(user);
 
             // initial Cart
-            Cart savedCart = cartRepository.save(new Cart(savedUser));
+            ShoppingCart savedCart = cartRepository.save(new ShoppingCart(savedUser));
             savedUser.setCart(savedCart);
             return userRepository.save(savedUser);
 
         } catch (Exception e) {
-            throw new MyException(ResultEnum.VALID_ERROR);
+            throw new IllegalArgumentException("ERROR");
         }
 
     }

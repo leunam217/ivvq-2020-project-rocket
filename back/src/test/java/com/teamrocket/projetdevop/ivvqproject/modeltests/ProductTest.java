@@ -1,6 +1,6 @@
 package com.teamrocket.projetdevop.ivvqproject.modeltests;
 
-import com.teamrocket.projetdevop.ivvqproject.domain.Product;
+/**import com.teamrocket.projetdevop.ivvqproject.domain.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -77,3 +77,4 @@ public class ProductTest {
     }
 
 }
+**/

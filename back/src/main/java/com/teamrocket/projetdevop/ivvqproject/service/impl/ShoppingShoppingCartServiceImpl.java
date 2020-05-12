@@ -7,7 +7,7 @@ import com.teamrocket.projetdevop.ivvqproject.repositories.OrderRepository;
 import com.teamrocket.projetdevop.ivvqproject.repositories.ProductInOrderRepository;
 import com.teamrocket.projetdevop.ivvqproject.repositories.ShoppingCartRepository;
 import com.teamrocket.projetdevop.ivvqproject.repositories.UserRepository;
-import com.teamrocket.projetdevop.ivvqproject.service.CartService;
+import com.teamrocket.projetdevop.ivvqproject.service.ShoppingCartService;
 import com.teamrocket.projetdevop.ivvqproject.service.ProductService;
 import com.teamrocket.projetdevop.ivvqproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import java.util.Set;
 
 
 @Service
-public class ShoppingCartServiceImpl implements CartService {
+public class ShoppingShoppingCartServiceImpl implements ShoppingCartService {
 
     @Autowired
     ProductService productService;
@@ -43,7 +43,7 @@ public class ShoppingCartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void mergeLocalCart(Collection<ProductOrdered> productInOrders, User user) {
+    public void finalCart(Collection<ProductOrdered> productInOrders, User user) {
         ShoppingCart finalCart = user.getCart();
         productInOrders.forEach(productInOrder -> {
             Set<ProductOrdered> set = finalCart.getProducts();
@@ -78,11 +78,9 @@ public class ShoppingCartServiceImpl implements CartService {
     @Override
     @Transactional
     public void placeOrder(User user) {
-        // Creat an order
         Order order = new Order(user);
         orderRepository.save(order);
 
-        // clear cart's foreign key & set order's foreign key& decrease stock
         user.getCart().getProducts().forEach(productInOrder -> {
             productInOrder.setCart(null);
             productInOrder.setOrder(order);

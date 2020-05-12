@@ -2,12 +2,17 @@ package com.teamrocket.projetdevop.ivvqproject.repositories;
 
 import com.teamrocket.projetdevop.ivvqproject.domain.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
+import java.util.List;
 
-@Repository
-@Transactional
-public interface OrderRepository extends JpaRepository<Order, Long> {
+
+public interface OrderRepository extends JpaRepository<Order, Integer> {
+
+
+    Order findByOrderId(Long orderId);
+
+    List<Order> findAllByBuyerEmailOrderByOrderStatusAscCreateTimeDesc(String buyerEmail);
+
+    List<Order> findAllByOrderByOrderStatusAscCreateTimeDesc();
 
 }

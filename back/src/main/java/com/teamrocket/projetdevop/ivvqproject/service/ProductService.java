@@ -1,34 +1,25 @@
-package me.zhulin.shopapi.service;
+package com.teamrocket.projetdevop.ivvqproject.service;
 
 
-import me.zhulin.shopapi.entity.ProductInfo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.teamrocket.projetdevop.ivvqproject.domain.Product;
+import com.teamrocket.projetdevop.ivvqproject.domain.User;
+
+import java.util.List;
 
 
 public interface ProductService {
 
-    ProductInfo findOne(String productId);
+    Product findOne(String productId);
+    List<Product> findAll();
 
-    // All selling products
-    Page<ProductInfo> findUpAll(Pageable pageable);
-    // All products
-    Page<ProductInfo> findAll(Pageable pageable);
-    // All products in a category
-    Page<ProductInfo> findAllByName(String productName, Pageable pageable);
+    List<Product> findAllByName(String productName);
 
-    // increase stock
     void increaseStock(String productId, int amount);
 
-    //decrease stock
     void decreaseStock(String productId, int amount);
 
-    ProductInfo offSale(String productId);
-
-    ProductInfo onSale(String productId);
-
-    ProductInfo update(ProductInfo productInfo);
-    ProductInfo save(ProductInfo productInfo);
+    Product update(Product productInfo);
+    Product save(Product productInfo);
 
     void delete(String productId);
 

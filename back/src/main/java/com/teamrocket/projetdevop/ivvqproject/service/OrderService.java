@@ -1,26 +1,21 @@
-package me.zhulin.shopapi.service;
+package com.teamrocket.projetdevop.ivvqproject.service;
 
 
-import me.zhulin.shopapi.entity.OrderMain;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.teamrocket.projetdevop.ivvqproject.domain.Order;
 
+import java.util.List;
 
 
 public interface OrderService {
-    Page<OrderMain> findAll(Pageable pageable);
+    List<Order> findAll();
 
-    Page<OrderMain> findByStatus(Integer status, Pageable pageable);
+    List<Order> findByBuyerEmail(String email);
 
-    Page<OrderMain> findByBuyerEmail(String email, Pageable pageable);
-
-    Page<OrderMain> findByBuyerPhone(String phone, Pageable pageable);
-
-    OrderMain findOne(Long orderId);
+    Order findOne(Long orderId);
 
 
-    OrderMain finish(Long orderId);
+    Order finish(Long orderId);
 
-    OrderMain cancel(Long orderId);
+    Order cancel(Long orderId);
 
 }

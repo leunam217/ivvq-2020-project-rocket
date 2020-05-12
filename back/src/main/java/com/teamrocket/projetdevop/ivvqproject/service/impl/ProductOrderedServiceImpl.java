@@ -4,7 +4,7 @@ package com.teamrocket.projetdevop.ivvqproject.service.impl;
 import com.teamrocket.projetdevop.ivvqproject.domain.ProductOrdered;
 import com.teamrocket.projetdevop.ivvqproject.domain.User;
 import com.teamrocket.projetdevop.ivvqproject.repositories.ProductInOrderRepository;
-import com.teamrocket.projetdevop.ivvqproject.service.ProductInOrderService;
+import com.teamrocket.projetdevop.ivvqproject.service.ProductOrderedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 
 @Service
-public class ProductInOrderServiceImpl implements ProductInOrderService {
+public class ProductOrderedServiceImpl implements ProductOrderedService {
 
     @Autowired
     ProductInOrderRepository productInOrderRepository;

@@ -1,11 +1,7 @@
 package com.teamrocket.projetdevop.ivvqproject.modeltests;
 
 
-
-import com.teamrocket.projetdevop.ivvqproject.domain.Order;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+/**import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.validation.Validation;
@@ -60,3 +56,4 @@ public class OrderTest {
         Assertions.assertFalse(validator.validate(order).isEmpty());
     }
 }
+**/

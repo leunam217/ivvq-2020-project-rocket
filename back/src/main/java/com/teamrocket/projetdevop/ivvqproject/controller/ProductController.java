@@ -1,16 +1,15 @@
-package com.teamrocket.projetdevop.ivvqproject.api;
+package com.teamrocket.projetdevop.ivvqproject.controller;
 
 
 import com.teamrocket.projetdevop.ivvqproject.domain.Product;
 import com.teamrocket.projetdevop.ivvqproject.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -19,19 +18,15 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    /**
-     * Show All Categories
-     */
 
     @GetMapping("/product")
-    public Page<Product> findAll(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                 @RequestParam(value = "size", defaultValue = "3") Integer size) {
-        PageRequest request = PageRequest.of(page - 1, size);
-        return productService.findAll(request);
+    public List<Product> findAllProduct() {
+
+        return productService.findAll();
     }
 
     @GetMapping("/product/{productId}")
-    public Product showOne(@PathVariable("productId") String productId) {
+    public Product showOneProduct(@PathVariable("productId") String productId) {
 
         Product productInfo = productService.findOne(productId);
 
@@ -39,13 +34,12 @@ public class ProductController {
     }
 
     @PostMapping("/seller/product/new")
-    public ResponseEntity create(@Valid @RequestBody Product product,
+    public ResponseEntity createProduct(@Valid @RequestBody Product product,
                                  BindingResult bindingResult) {
         Product productIdExists = productService.findOne(product.getProductId());
         if (productIdExists != null) {
-            bindingResult
-                    .rejectValue("productId", "error.product",
-                            "There is already a product with the code provided");
+            bindingResult.rejectValue("productId", "error.product",
+                            "Product already exist");
         }
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult);
@@ -54,7 +48,7 @@ public class ProductController {
     }
 
     @PutMapping("/seller/product/{id}/edit")
-    public ResponseEntity edit(@PathVariable("id") String productId,
+    public ResponseEntity editProduct(@PathVariable("id") String productId,
                                @Valid @RequestBody Product product,
                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -68,7 +62,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/seller/product/{id}/delete")
-    public ResponseEntity delete(@PathVariable("id") String productId) {
+    public ResponseEntity deleteProduct(@PathVariable("id") String productId) {
         productService.delete(productId);
         return ResponseEntity.ok().build();
     }

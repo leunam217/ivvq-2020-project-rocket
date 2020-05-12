@@ -1,4 +1,4 @@
-package com.teamrocket.projetdevop.ivvqproject.modeltests;
+/**package com.teamrocket.projetdevop.ivvqproject.modeltests;
 
 import com.teamrocket.projetdevop.ivvqproject.domain.User;
 import org.junit.jupiter.api.Assertions;
@@ -115,3 +115,4 @@ public class UserTest {
     }
 
 }
+**/

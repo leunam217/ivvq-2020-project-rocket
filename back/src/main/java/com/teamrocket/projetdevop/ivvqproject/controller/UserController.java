@@ -1,51 +1,54 @@
-package com.teamrocket.projetdevop.ivvqproject.api;
+package com.teamrocket.projetdevop.ivvqproject.controller;
 
 
 import com.teamrocket.projetdevop.ivvqproject.domain.User;
-import com.teamrocket.projetdevop.ivvqproject.security.JWT.JwtProvider;
+import com.teamrocket.projetdevop.ivvqproject.security.JWT.JsonWebTokenProvider;
 import com.teamrocket.projetdevop.ivvqproject.service.UserService;
-import com.teamrocket.projetdevop.ivvqproject.vo.request.LoginForm;
-import com.teamrocket.projetdevop.ivvqproject.vo.response.JwtResponse;
+import com.teamrocket.projetdevop.ivvqproject.requestresponse.AuthentificationForm;
+import com.teamrocket.projetdevop.ivvqproject.requestresponse.JwtResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 
 @CrossOrigin
 @RestController
 public class UserController {
 
+   private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     UserService userService;
 
 
     @Autowired
-    JwtProvider jwtProvider;
+    JsonWebTokenProvider jsonWebTokenProvider;
 
     @Autowired
     AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
-        // throws Exception if authentication failed
+    public ResponseEntity<?> login(@RequestBody AuthentificationForm authentificationForm) {
 
         try {
 
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
+                    new UsernamePasswordAuthenticationToken(authentificationForm.getUsername(), authentificationForm.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String jwt = jwtProvider.generate(authentication);
+            String jwt = jsonWebTokenProvider.generate(authentication);
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             User user = userService.findOne(userDetails.getUsername());
@@ -53,7 +56,9 @@ public class UserController {
             return ResponseEntity.ok(new JwtResponse(jwt, user.getEmail(), user.getName(), user.getRole()));
 
         } catch (AuthenticationException e) {
+            logger.info("Incorrect username or password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
         }
     }
 
@@ -67,24 +72,5 @@ public class UserController {
         }
     }
 
-    @PutMapping("/profile")
-    public ResponseEntity<User> update(@RequestBody User user, Principal principal) {
 
-        try {
-            if (!principal.getName().equals(user.getEmail())) throw new IllegalArgumentException();
-            return ResponseEntity.ok(userService.update(user));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @GetMapping("/profile/{email}")
-    public ResponseEntity<User> getProfile(@PathVariable("email") String email, Principal principal) {
-        if (principal.getName().equals(email)) {
-            return ResponseEntity.ok(userService.findOne(email));
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-
-    }
 }

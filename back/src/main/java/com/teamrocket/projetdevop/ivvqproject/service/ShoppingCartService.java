@@ -8,11 +8,11 @@ import com.teamrocket.projetdevop.ivvqproject.domain.User;
 import java.util.Collection;
 
 
-public interface CartService {
+public interface ShoppingCartService {
 
     ShoppingCart getCart(User user);
 
-    void mergeLocalCart(Collection<ProductOrdered> productInOrders, User user);
+    void finalCart(Collection<ProductOrdered> productInOrders, User user);
 
     void delete(String itemId, User user);
 

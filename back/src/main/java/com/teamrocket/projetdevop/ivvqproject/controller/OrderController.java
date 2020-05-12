@@ -1,22 +1,20 @@
-package com.teamrocket.projetdevop.ivvqproject.api;
+package com.teamrocket.projetdevop.ivvqproject.controller;
 
 
 
 import com.teamrocket.projetdevop.ivvqproject.domain.Order;
-import com.teamrocket.projetdevop.ivvqproject.domain.ProductInOrder;
 
 import com.teamrocket.projetdevop.ivvqproject.service.OrderService;
 import com.teamrocket.projetdevop.ivvqproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -28,24 +26,22 @@ public class OrderController {
     UserService userService;
 
     @GetMapping("/order")
-    public Page<Order> orderList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                 @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                 Authentication authentication) {
-        PageRequest request = PageRequest.of(page - 1, size);
-        Page<Order> orderPage;
+    public List<Order> orderHistoric(Authentication authentication) {
+
+        List<Order> order;
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
-            orderPage = orderService.findByBuyerEmail(authentication.getName(), request);
+            order = orderService.findByBuyerEmail(authentication.getName());
         } else {
-            orderPage = orderService.findAll(request);
+            order = orderService.findAll();
         }
-        return orderPage;
+        return order;
     }
 
 
     @PatchMapping("/order/cancel/{id}")
-    public ResponseEntity<Order> cancel(@PathVariable("id") Long orderId, Authentication authentication) {
-        Order orderMain = orderService.findOne(orderId);
-        if (!authentication.getName().equals(orderMain.getBuyerEmail()) && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
+    public ResponseEntity<Order> cancelOrder(@PathVariable("id") Long orderId, Authentication authentication) {
+        Order order = orderService.findOne(orderId);
+        if (!authentication.getName().equals(order.getBuyerEmail()) && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -53,7 +49,7 @@ public class OrderController {
     }
 
     @PatchMapping("/order/finish/{id}")
-    public ResponseEntity<Order> finish(@PathVariable("id") Long orderId, Authentication authentication) {
+    public ResponseEntity<Order> finishOrder(@PathVariable("id") Long orderId, Authentication authentication) {
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -61,14 +57,14 @@ public class OrderController {
     }
 
     @GetMapping("/order/{id}")
-    public ResponseEntity show(@PathVariable("id") Long orderId, Authentication authentication) {
+    public ResponseEntity showOneOrder(@PathVariable("id") Long orderId, Authentication authentication) {
         boolean isCustomer = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
-        Order orderMain = orderService.findOne(orderId);
-        if (isCustomer && !authentication.getName().equals(orderMain.getBuyerEmail())) {
+        Order order = orderService.findOne(orderId);
+        if (isCustomer && !authentication.getName().equals(order.getBuyerEmail())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        Collection<ProductInOrder> items = orderMain.getProducts();
-        return ResponseEntity.ok(orderMain);
+        order.getProducts();
+        return ResponseEntity.ok(order);
     }
 }

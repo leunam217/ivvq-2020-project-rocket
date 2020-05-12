@@ -1,15 +1,10 @@
-package me.zhulin.shopapi.service;
+package com.teamrocket.projetdevop.ivvqproject.service;
 
 
-import me.zhulin.shopapi.entity.User;
-
-import java.util.Collection;
-
+import com.teamrocket.projetdevop.ivvqproject.domain.User;
 
 public interface UserService {
     User findOne(String email);
-
-    Collection<User> findByRole(String role);
 
     User save(User user);
 
