@@ -1,10 +1,11 @@
-package com.teamrocket.projetdevop.ivvqproject.controller;
+package com.teamrocket.projetdevop.ivvqproject.api;
+
 
 import com.teamrocket.projetdevop.ivvqproject.domain.User;
-import com.teamrocket.projetdevop.ivvqproject.security.LoginForm;
-import com.teamrocket.projetdevop.ivvqproject.security.jws.JsonWebProvider;
-import com.teamrocket.projetdevop.ivvqproject.security.jws.JwtResponse;
-import com.teamrocket.projetdevop.ivvqproject.services.UserServiceImpl;
+import com.teamrocket.projetdevop.ivvqproject.security.JWT.JwtProvider;
+import com.teamrocket.projetdevop.ivvqproject.service.UserService;
+import com.teamrocket.projetdevop.ivvqproject.vo.request.LoginForm;
+import com.teamrocket.projetdevop.ivvqproject.vo.response.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,33 +20,38 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+
 @CrossOrigin
 @RestController
-@RequestMapping
 public class UserController {
 
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
 
 
     @Autowired
-    JsonWebProvider jwtProvider;
+    JwtProvider jwtProvider;
 
     @Autowired
     AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginForm loginForm) {
-
+    public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
+        // throws Exception if authentication failed
 
         try {
+
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
             String jwt = jwtProvider.generate(authentication);
+
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User user = userService.findOneUser(userDetails.getUsername());
+            User user = userService.findOne(userDetails.getUsername());
+            System.out.println(jwt);
             return ResponseEntity.ok(new JwtResponse(jwt, user.getEmail(), user.getName(), user.getRole()));
+
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -55,7 +61,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<User> save(@RequestBody User user) {
         try {
-            return ResponseEntity.ok(userService.saveUser(user));
+            return ResponseEntity.ok(userService.save(user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -66,7 +72,7 @@ public class UserController {
 
         try {
             if (!principal.getName().equals(user.getEmail())) throw new IllegalArgumentException();
-            return ResponseEntity.ok(userService.updateUser(user));
+            return ResponseEntity.ok(userService.update(user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -75,12 +81,10 @@ public class UserController {
     @GetMapping("/profile/{email}")
     public ResponseEntity<User> getProfile(@PathVariable("email") String email, Principal principal) {
         if (principal.getName().equals(email)) {
-            return ResponseEntity.ok(userService.findOneUser(email));
+            return ResponseEntity.ok(userService.findOne(email));
         } else {
             return ResponseEntity.badRequest().build();
         }
 
     }
-
-
 }

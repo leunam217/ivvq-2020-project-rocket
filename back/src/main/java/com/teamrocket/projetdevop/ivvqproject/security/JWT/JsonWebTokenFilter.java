@@ -1,7 +1,8 @@
-package com.teamrocket.projetdevop.ivvqproject.security.jws;
+package com.teamrocket.projetdevop.ivvqproject.security.JWT;
 
 import com.teamrocket.projetdevop.ivvqproject.domain.User;
-import com.teamrocket.projetdevop.ivvqproject.services.UserServiceImpl;
+import com.teamrocket.projetdevop.ivvqproject.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,23 +17,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 @Component
-public class JsonWebFilter extends OncePerRequestFilter {
-
+public class JsonWebTokenFilter extends OncePerRequestFilter {
     @Autowired
-    private JsonWebProvider jwtProvider;
-
+    private JsonWebTokenProvider jsonWebTokenProvider;
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String jwt = getToken(httpServletRequest);
-        if (jwt != null && jwtProvider.validate(jwt)) {
+        if (jwt != null && jsonWebTokenProvider.validate(jwt)) {
             try {
-                String userAccount = jwtProvider.getUserAccount(jwt);
-                User user = userService.findOneUser(userAccount);
+                String userAccount = jsonWebTokenProvider.getUserAccount(jwt);
+                User user = userService.findOne(userAccount);
 
                 SimpleGrantedAuthority sga = new SimpleGrantedAuthority(user.getRole());
                 ArrayList<SimpleGrantedAuthority> list = new ArrayList<>();
@@ -51,8 +50,8 @@ public class JsonWebFilter extends OncePerRequestFilter {
     private String getToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Rocket ")) {
-            return authHeader.replace("Rocket ", "");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.replace("Bearer ", "");
         }
 
         return null;

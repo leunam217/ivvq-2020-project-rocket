@@ -1,71 +1,74 @@
-package com.teamrocket.projetdevop.ivvqproject.controller;
+package com.teamrocket.projetdevop.ivvqproject.api;
+
+
 
 import com.teamrocket.projetdevop.ivvqproject.domain.Order;
-import com.teamrocket.projetdevop.ivvqproject.services.OrderServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.teamrocket.projetdevop.ivvqproject.domain.ProductInOrder;
+
+import com.teamrocket.projetdevop.ivvqproject.service.OrderService;
+import com.teamrocket.projetdevop.ivvqproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import java.util.Collection;
 
-@CrossOrigin
 @RestController
-@RequestMapping({"/api/orders"})
+@CrossOrigin
 public class OrderController {
 
-    Logger log = LoggerFactory.getLogger(OrderController.class);
-
     @Autowired
-    private OrderServiceImpl orderService;
+    OrderService orderService;
+    @Autowired
+    UserService userService;
 
-    @GetMapping
-    public List<Order> findAll() {
-        return orderService.findAll();
+    @GetMapping("/order")
+    public Page<Order> orderList(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                 @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                 Authentication authentication) {
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<Order> orderPage;
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
+            orderPage = orderService.findByBuyerEmail(authentication.getName(), request);
+        } else {
+            orderPage = orderService.findAll(request);
+        }
+        return orderPage;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Order> findById(@PathVariable long id) {
-        Optional<Order> order = orderService.findById(id);
 
-        if (!order.isPresent()) {
-            log.info("Order with id " + id + " does not exist.");
-            return ResponseEntity.notFound().build();
+    @PatchMapping("/order/cancel/{id}")
+    public ResponseEntity<Order> cancel(@PathVariable("id") Long orderId, Authentication authentication) {
+        Order orderMain = orderService.findOne(orderId);
+        if (!authentication.getName().equals(orderMain.getBuyerEmail()) && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(orderService.cancel(orderId));
+    }
+
+    @PatchMapping("/order/finish/{id}")
+    public ResponseEntity<Order> finish(@PathVariable("id") Long orderId, Authentication authentication) {
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(orderService.finish(orderId));
+    }
+
+    @GetMapping("/order/{id}")
+    public ResponseEntity show(@PathVariable("id") Long orderId, Authentication authentication) {
+        boolean isCustomer = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+        Order orderMain = orderService.findOne(orderId);
+        if (isCustomer && !authentication.getName().equals(orderMain.getBuyerEmail())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        return ResponseEntity.ok(order.get());
-    }
-
-    @PostMapping
-    public ResponseEntity<Order> create(@Valid @RequestBody Order order) {
-        return ResponseEntity.ok(orderService.createOrUpdate(order));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Order> update(@PathVariable long id, @Valid @RequestBody Order order) {
-        Optional<Order> tempOrder = orderService.findById(id);
-
-        if (!tempOrder.isPresent()) {
-            log.error("Order with id " + id + " does not exist for updating.");
-            return ResponseEntity.badRequest().build();
-        }
-
-        return ResponseEntity.ok(orderService.createOrUpdate(order));
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable long id) {
-        Optional<Order> tempOrder = orderService.findById(id);
-
-        if (!tempOrder.isPresent()) {
-            log.error("Order with id " + id + " does not exist for deletion.");
-            return;
-        }
-
-        orderService.deleteById(id);
+        Collection<ProductInOrder> items = orderMain.getProducts();
+        return ResponseEntity.ok(orderMain);
     }
 }
-

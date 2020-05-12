@@ -1,61 +1,66 @@
 package com.teamrocket.projetdevop.ivvqproject.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
 
-
-import javax.persistence.*;
-
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Objects;
+import java.util.Date;
 
 
-@Data
 @Entity
-public class Product{
-
+@Data
+@DynamicUpdate
+public class ProductInfo implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String productId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JsonIgnore
-    ShoppingCart cart;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Order order;
-
-    @NotNull(message = "is required")
-    @Size(min = 3, max = 50, message = "provide at least 3 and not more than 50 characters")
+    @NotNull
     private String productName;
 
-    @NotNull(message = "is required")
-    private String productDescription;
 
-    @NotNull(message = "provide a valid price")
-    @Min(value = 0, message = "cannot be a negative number")
+    @NotNull
     private BigDecimal productPrice;
 
-   @NotNull(message = "provide a valid quantity of stock")
-   @Min(value = 0, message = "a stock cannot be negative")
-   private Integer productStock;
 
-   private String productImage;
+    @NotNull
+    @Min(0)
+    private Integer productStock;
 
-   @Min(value = 1)
-    private Integer count;
 
-    public Long getId() {
-        return id;
+    private String productDescription;
+
+
+    private String productIcon;
+
+
+
+    @ColumnDefault("0")
+    private Integer productStatus;
+
+
+    @CreationTimestamp
+    private Date createTime;
+    @UpdateTimestamp
+    private Date updateTime;
+
+    public ProductInfo() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -64,14 +69,6 @@ public class Product{
 
     public void setProductName(String productName) {
         this.productName = productName;
-    }
-
-    public String getProductDescription() {
-        return productDescription;
-    }
-
-    public void setProductDescription(String productDescription) {
-        this.productDescription = productDescription;
     }
 
     public BigDecimal getProductPrice() {
@@ -90,71 +87,44 @@ public class Product{
         this.productStock = productStock;
     }
 
-    public Integer getCount() {
-        return count;
+    public String getProductDescription() {
+        return productDescription;
     }
 
-    public void setCount(Integer count) {
-        this.count = count;
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
     }
 
-    public String getProductImage() {
-        return productImage;
+    public String getProductIcon() {
+        return productIcon;
     }
 
-    public void setProductImage(String productImage) {
-        this.productImage = productImage;
+    public void setProductIcon(String productIcon) {
+        this.productIcon = productIcon;
     }
 
-    public ShoppingCart getCart() {
-        return cart;
+    public Integer getProductStatus() {
+        return productStatus;
     }
 
-    public Order getOrder() {
-        return order;
+    public void setProductStatus(Integer productStatus) {
+        this.productStatus = productStatus;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCart(ShoppingCart cart) {
-        this.cart = cart;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return id.equals(product.id) &&
-                productName.equals(product.productName) &&
-                productDescription.equals(product.productDescription) &&
-                productPrice.equals(product.productPrice) &&
-                Objects.equals(productStock, product.productStock) &&
-                count.equals(product.count) &&
-                productImage.equals(product.productImage);
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, productName, productDescription, productPrice, productStock, count, productImage);
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", productName='" + productName + '\'' +
-                ", productDescription='" + productDescription + '\'' +
-                ", productPrice=" + productPrice +
-                ", productStock=" + productStock +
-                ", productImage='" + productImage + '\'' +
-                ", count=" + count +
-                '}';
-    }
-
-    public Product() {}
-
-
 }

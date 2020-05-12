@@ -1,4 +1,4 @@
-package com.teamrocket.projetdevop.ivvqproject.security.jws;
+package com.teamrocket.projetdevop.ivvqproject.security.JWT;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+
+
 @Component
-public class JsonWebProvider {
+public class JsonWebTokenProvider {
 
-    private static final Logger logger = LoggerFactory.getLogger(JsonWebProvider.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(JsonWebTokenProvider.class);
     @Value("${jwtSecret}")
     private String jwtSecret;
-
     @Value("${jwtExpiration}")
     private int jwtExpiration;
 

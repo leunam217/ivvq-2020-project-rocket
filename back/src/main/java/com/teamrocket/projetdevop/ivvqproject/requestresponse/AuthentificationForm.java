@@ -1,11 +1,13 @@
-package com.teamrocket.projetdevop.ivvqproject.security;
+package com.teamrocket.projetdevop.ivvqproject.requestresponse;
 
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
+
+
 @Data
-public class LoginForm {
+public class AuthentifcationForm {
     @NotBlank
     private String username;
     @NotBlank
