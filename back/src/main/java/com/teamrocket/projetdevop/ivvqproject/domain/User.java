@@ -35,8 +35,10 @@ public class User implements Serializable {
     private String phone;
     @NotEmpty
     private String address;
-    @NotNull
-    private boolean active;
+
+
+    private boolean active = true;
+
     @NotEmpty
     private String role = "ROLE_CUSTOMER";
 
@@ -109,13 +111,6 @@ public class User implements Serializable {
         this.address = address;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
 
     public String getRole() {
         return role;
