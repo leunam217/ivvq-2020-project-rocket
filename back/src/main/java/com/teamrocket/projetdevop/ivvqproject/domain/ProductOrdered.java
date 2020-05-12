@@ -15,7 +15,7 @@ import java.util.Objects;
 @Entity
 @Data
 @NoArgsConstructor
-public class ProductInOrder {
+public class ProductOrdered {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -54,7 +54,7 @@ public class ProductInOrder {
     private Integer count;
 
 
-    public ProductInOrder(Product product, Integer quantity) {
+    public ProductOrdered(Product product, Integer quantity) {
         this.productId = product.getProductId();
         this.productName = product.getProductName();
         this.productDescription = product.getProductDescription();
@@ -84,7 +84,7 @@ public class ProductInOrder {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        ProductInOrder that = (ProductInOrder) o;
+        ProductOrdered that = (ProductOrdered) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(productId, that.productId) &&
                 Objects.equals(productName, that.productName) &&

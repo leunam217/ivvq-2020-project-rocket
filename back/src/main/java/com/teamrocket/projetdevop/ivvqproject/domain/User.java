@@ -1,4 +1,4 @@
-package me.zhulin.shopapi.entity;
+package com.teamrocket.projetdevop.ivvqproject.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -42,7 +42,7 @@ public class User implements Serializable {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore  // fix bi-direction toString() recursion problem
-    private Cart cart;
+    private ShoppingCart cart;
 
 
 
@@ -125,11 +125,11 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    public Cart getCart() {
+    public ShoppingCart getCart() {
         return cart;
     }
 
-    public void setCart(Cart cart) {
+    public void setCart(ShoppingCart cart) {
         this.cart = cart;
     }
 }

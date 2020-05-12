@@ -13,7 +13,7 @@ import java.util.Set;
 @Data
 @Entity
 @NoArgsConstructor
-public class Cart implements Serializable {
+public class ShoppingCart implements Serializable {
     @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,13 +22,11 @@ public class Cart implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JsonIgnore
-//    @JoinColumn(name = "email", referencedColumnName = "email")
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, orphanRemoval = true,
-            mappedBy = "cart")
-    private Set<ProductInOrder> products = new HashSet<>();
+            fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<ProductOrdered> products = new HashSet<>();
 
     @Override
     public String toString() {
@@ -38,7 +36,7 @@ public class Cart implements Serializable {
                 '}';
     }
 
-    public Cart(User user) {
+    public ShoppingCart(User user) {
         this.user  = user;
     }
 
@@ -59,11 +57,11 @@ public class Cart implements Serializable {
         this.user = user;
     }
 
-    public Set<ProductInOrder> getProducts() {
+    public Set<ProductOrdered> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<ProductInOrder> products) {
+    public void setProducts(Set<ProductOrdered> products) {
         this.products = products;
     }
 }

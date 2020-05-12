@@ -1,10 +1,9 @@
 package com.teamrocket.projetdevop.ivvqproject.domain;
 
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
+
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
+
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,13 +11,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+
 
 
 @Entity
 @Data
 @DynamicUpdate
-public class ProductInfo implements Serializable {
+public class Product implements Serializable {
     @Id
     private String productId;
 
@@ -42,17 +41,7 @@ public class ProductInfo implements Serializable {
     private String productIcon;
 
 
-
-    @ColumnDefault("0")
-    private Integer productStatus;
-
-
-    @CreationTimestamp
-    private Date createTime;
-    @UpdateTimestamp
-    private Date updateTime;
-
-    public ProductInfo() {
+    public Product() {
     }
 
     public String getProductId() {
@@ -103,28 +92,5 @@ public class ProductInfo implements Serializable {
         this.productIcon = productIcon;
     }
 
-    public Integer getProductStatus() {
-        return productStatus;
-    }
 
-    public void setProductStatus(Integer productStatus) {
-        this.productStatus = productStatus;
-    }
-
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

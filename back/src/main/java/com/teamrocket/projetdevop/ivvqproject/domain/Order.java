@@ -2,6 +2,7 @@ package com.teamrocket.projetdevop.ivvqproject.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
@@ -17,11 +18,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@Entity
+@Entity(name = "orders")
 @Data
 @NoArgsConstructor
 @DynamicUpdate
-public class OrderMain implements Serializable {
+public class Order implements Serializable {
     private static final long serialVersionUID = -3819883511505235030L;
 
     @Id
@@ -31,8 +32,8 @@ public class OrderMain implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            mappedBy = "orderMain")
-    private Set<ProductInOrder> products = new HashSet<>();
+            mappedBy = "order")
+    private Set<ProductOrdered> products = new HashSet<>();
 
     @NotEmpty
     private String buyerEmail;
@@ -50,10 +51,7 @@ public class OrderMain implements Serializable {
     @NotNull
     private BigDecimal orderAmount;
 
-
-    @NotNull
-    @ColumnDefault("0")
-    private Integer orderStatus;
+    private String orderStatus;
 
     @CreationTimestamp
     private LocalDateTime createTime;
@@ -61,7 +59,7 @@ public class OrderMain implements Serializable {
     @UpdateTimestamp
     private LocalDateTime updateTime;
 
-    public OrderMain(User buyer) {
+    public Order(User buyer) {
         this.buyerEmail = buyer.getEmail();
         this.buyerName = buyer.getName();
         this.buyerPhone = buyer.getPhone();
@@ -69,7 +67,7 @@ public class OrderMain implements Serializable {
         this.orderAmount = buyer.getCart().getProducts().stream().map(item -> item.getProductPrice().multiply(new BigDecimal(item.getCount())))
                 .reduce(BigDecimal::add)
                 .orElse(new BigDecimal(0));
-        this.orderStatus = 0;
+        this.orderStatus = "";
 
     }
 
@@ -81,11 +79,11 @@ public class OrderMain implements Serializable {
         this.orderId = orderId;
     }
 
-    public Set<ProductInOrder> getProducts() {
+    public Set<ProductOrdered> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<ProductInOrder> products) {
+    public void setProducts(Set<ProductOrdered> products) {
         this.products = products;
     }
 
@@ -129,13 +127,6 @@ public class OrderMain implements Serializable {
         this.orderAmount = orderAmount;
     }
 
-    public Integer getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(Integer orderStatus) {
-        this.orderStatus = orderStatus;
-    }
 
     public LocalDateTime getCreateTime() {
         return createTime;
