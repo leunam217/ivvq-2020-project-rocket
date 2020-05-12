@@ -1,81 +1,70 @@
 package com.teamrocket.projetdevop.ivvqproject.controller;
 
-import com.teamrocket.projetdevop.ivvqproject.domain.Product;
-import com.teamrocket.projetdevop.ivvqproject.services.ProductServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import com.teamrocket.projetdevop.ivvqproject.domain.Product;
+import com.teamrocket.projetdevop.ivvqproject.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
+@CrossOrigin
 @RestController
-@RequestMapping("api/products")
 public class ProductController {
 
-    Logger log = LoggerFactory.getLogger(ProductController.class);
     @Autowired
-    ProductServiceImpl productService;
+    ProductService productService;
 
-    @GetMapping
-    public List<Product> findAll()
-    {
-        return productService.findAllProduct();
+
+    @GetMapping("/product")
+    public List<Product> findAllProduct() {
+
+        return productService.findAll();
     }
 
-    @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product)
-    {
-        return ResponseEntity.ok(productService.createOrUpdate(product));
+    @GetMapping("/product/{productId}")
+    public Product showOneProduct(@PathVariable("productId") String productId) {
+
+        Product productInfo = productService.findOne(productId);
+
+        return productInfo;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> findById(@PathVariable long id) {
+    @PostMapping("/seller/product/new")
+    public ResponseEntity createProduct(@Valid @RequestBody Product product,
+                                 BindingResult bindingResult) {
+        Product productIdExists = productService.findOne(product.getProductId());
+        if (productIdExists != null) {
+            bindingResult.rejectValue("productId", "error.product",
+                            "Product already exist");
+        }
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult);
+        }
+        return ResponseEntity.ok(productService.save(product));
+    }
 
-        Optional<Product> product = productService.findOneProductById(id);
-
-        if (!product.isPresent()) {
-            log.info("Product with id " + id + " does not exist.");
-            return ResponseEntity.notFound().build();
+    @PutMapping("/seller/product/{id}/edit")
+    public ResponseEntity editProduct(@PathVariable("id") String productId,
+                               @Valid @RequestBody Product product,
+                               BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult);
+        }
+        if (!productId.equals(product.getProductId())) {
+            return ResponseEntity.badRequest().body("Id Not Matched");
         }
 
-        return ResponseEntity.ok(product.get());
+        return ResponseEntity.ok(productService.update(product));
     }
 
-    @PutMapping(value="/{id}")
-    public ResponseEntity<Product> update(@PathVariable long id, @Valid @RequestBody Product product) {
-
-        Optional<Product> p = productService.findOneProductById(id);
-
-        if (!p.isPresent()) {
-            log.error("Product with id " + id + " does not exist.");
-            return ResponseEntity.notFound().build();
-        }
-
-        p.get().setProductName(product.getProductName());
-        p.get().setProductPrice(product.getProductPrice());
-        p.get().setProductDescription(product.getProductDescription());
-        p.get().setProductStock(product.getProductStock());
-        p.get().setCount(product.getCount());
-        p.get().setProductImage(product.getProductImage());
-
-        return ResponseEntity.ok(productService.createOrUpdate(p.get()));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteById(@PathVariable long id) {
-        Optional<Product> p = productService.findOneProductById(id);
-
-        if (!p.isPresent()) {
-            log.error("Product with id " + id + " does not exist.");
-            return ResponseEntity.notFound().build();
-        }
-
-        productService.deleteProduct(id);
+    @DeleteMapping("/seller/product/{id}/delete")
+    public ResponseEntity deleteProduct(@PathVariable("id") String productId) {
+        productService.delete(productId);
         return ResponseEntity.ok().build();
     }
+
 }

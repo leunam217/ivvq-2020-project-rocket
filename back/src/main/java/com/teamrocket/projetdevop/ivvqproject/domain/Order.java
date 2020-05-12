@@ -1,54 +1,154 @@
 package com.teamrocket.projetdevop.ivvqproject.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+
 @Entity(name = "orders")
+@Data
+@NoArgsConstructor
+@DynamicUpdate
 public class Order implements Serializable {
+    private static final long serialVersionUID = -3819883511505235030L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long orderId;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Product> products = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "order")
+    private Set<ProductOrdered> products = new HashSet<>();
 
+    @NotEmpty
+    private String buyerEmail;
 
+    @NotEmpty
+    private String buyerName;
+
+    @NotEmpty
+    private String buyerPhone;
+
+    @NotEmpty
+    private String buyerAddress;
+
+    // Total Amount
     @NotNull
     private BigDecimal orderAmount;
 
-    @NotNull
     private String orderStatus;
 
     @CreationTimestamp
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @UpdateTimestamp
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
+    public Order(User buyer) {
+        this.buyerEmail = buyer.getEmail();
+        this.buyerName = buyer.getName();
+        this.buyerPhone = buyer.getPhone();
+        this.buyerAddress = buyer.getAddress();
+        this.orderAmount = buyer.getCart().getProducts().stream().map(item -> item.getProductPrice().multiply(new BigDecimal(item.getCount())))
+                .reduce(BigDecimal::add)
+                .orElse(new BigDecimal(0));
+        this.orderStatus = "";
 
-    public Long getId() {
-        return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Set<ProductOrdered> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<ProductOrdered> products) {
+        this.products = products;
+    }
+
+    public String getBuyerEmail() {
+        return buyerEmail;
+    }
+
+    public void setBuyerEmail(String buyerEmail) {
+        this.buyerEmail = buyerEmail;
+    }
+
+    public String getBuyerName() {
+        return buyerName;
+    }
+
+    public void setBuyerName(String buyerName) {
+        this.buyerName = buyerName;
+    }
+
+    public String getBuyerPhone() {
+        return buyerPhone;
+    }
+
+    public void setBuyerPhone(String buyerPhone) {
+        this.buyerPhone = buyerPhone;
+    }
+
+    public String getBuyerAddress() {
+        return buyerAddress;
+    }
+
+    public void setBuyerAddress(String buyerAddress) {
+        this.buyerAddress = buyerAddress;
+    }
+
+    public BigDecimal getOrderAmount() {
+        return orderAmount;
+    }
+
+    public void setOrderAmount(BigDecimal orderAmount) {
+        this.orderAmount = orderAmount;
     }
 
 
-    public Order() {}
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
 
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
 
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
 
-
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
 }
