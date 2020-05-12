@@ -28,8 +28,8 @@ services:
       - postgresdb
     ports:
       - 8080:8080
-    env_file:
-      - env-variables.env
+    environment:
+      - DATABASE_URL=jdbc:postgresql://postgresdb:5432/postgres
 
 
 
