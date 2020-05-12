@@ -65,11 +65,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
         http.cors().and().csrf().disable()
                 .authorizeRequests()
 
-               //.antMatchers("/profile/**").authenticated()
+
                 .antMatchers("/cart/**").access("hasRole('ROLE_CUSTOMER')")
                 .antMatchers("/order/finish/**").access("hasRole('ROLE_SELLER')")
                 .antMatchers("/order/**").authenticated()
-                //.antMatchers("/profiles/**").authenticated()
                 .antMatchers("/seller/product/new").access("hasRole('ROLE_SELLER')")
                 .antMatchers("/seller/**/delete").access("hasRole('ROLE_SELLER')")
                 .antMatchers("/seller/**").access("hasRole('ROLE_SELLER')")
