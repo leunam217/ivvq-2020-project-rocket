@@ -1,4 +1,4 @@
-package com.teamrocket.projetdevop.ivvqproject.vo.response;
+package com.teamrocket.projetdevop.ivvqproject.requestresponse;
 
 import lombok.Data;
 
