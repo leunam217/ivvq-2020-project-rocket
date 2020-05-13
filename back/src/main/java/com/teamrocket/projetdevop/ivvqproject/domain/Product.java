@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -22,19 +23,21 @@ public class Product implements Serializable {
     private String productId;
 
 
-    @NotNull
+    @NotEmpty
     private String productName;
 
 
-    @NotNull
+
+    @Min(0)
     private BigDecimal productPrice;
 
 
-    @NotNull
+
     @Min(0)
     private Integer productStock;
 
 
+    @NotEmpty
     private String productDescription;
 
 

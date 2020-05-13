@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -24,11 +25,13 @@ public class User implements Serializable {
     private Long id;
 
     @NaturalId
+    @Email
     @NotEmpty
     private String email;
     @NotEmpty
     @Size(min = 3, message = "Length must be more than 3")
     private String password;
+
     @NotEmpty
     private String name;
     @NotEmpty
@@ -45,8 +48,6 @@ public class User implements Serializable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore  // fix bi-direction toString() recursion problem
     private ShoppingCart cart;
-
-
 
 
     @Override
