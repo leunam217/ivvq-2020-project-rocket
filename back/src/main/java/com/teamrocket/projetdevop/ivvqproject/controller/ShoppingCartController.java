@@ -10,9 +10,15 @@ import com.teamrocket.projetdevop.ivvqproject.service.ProductOrderedService;
 import com.teamrocket.projetdevop.ivvqproject.service.ProductService;
 import com.teamrocket.projetdevop.ivvqproject.service.UserService;
 
+import com.teamrocket.projetdevop.ivvqproject.util.LuhnAlgorithm;
+import org.apache.commons.validator.routines.checkdigit.CheckDigitException;
+import org.apache.commons.validator.routines.checkdigit.LuhnCheckDigit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.security.Principal;
 import java.util.Collection;
@@ -23,6 +29,8 @@ import java.util.Collections;
 @RestController
 @RequestMapping("/cart")
 public class ShoppingCartController {
+
+    private final static Logger logger = LoggerFactory.getLogger(ShoppingCartController.class);
     @Autowired
     ShoppingCartService shoppingCartService;
     @Autowired
@@ -78,11 +86,21 @@ public class ShoppingCartController {
 
 
     @PostMapping("/checkout")
-    public ResponseEntity checkoutCart(Principal principal) {
+    public ResponseEntity checkoutCart(@RequestBody LuhnAlgorithm luhnAlgorithm, Principal principal) {
+
+
         User user = userService.findOne(principal.getName());
-        shoppingCartService.placeOrder(user);
+        if(!luhnAlgorithm.validateCreditCart(luhnAlgorithm.getCartNum()))
+        {
+            logger.info("the credit cart is not valid");
+        }
+        else
+        {
+            logger.info("Valid credit cart");
+            shoppingCartService.placeOrder(user);
+        }
+
         return ResponseEntity.ok(null);
     }
-
 
 }

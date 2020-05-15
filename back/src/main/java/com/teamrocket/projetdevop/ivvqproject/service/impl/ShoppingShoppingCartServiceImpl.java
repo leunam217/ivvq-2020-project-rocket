@@ -86,6 +86,7 @@ public class ShoppingShoppingCartServiceImpl implements ShoppingCartService {
             productInOrder.setOrder(order);
             productService.decreaseStock(productInOrder.getProductId(), productInOrder.getCount());
             productInOrderRepository.save(productInOrder);
+            cartRepository.deleteAll();
         });
 
     }

@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '@/views/Login.vue'
+import Product from '@/components/Product.vue'
+
 
 Vue.use(VueRouter)
 
@@ -17,6 +19,11 @@ const routes: Array<RouteConfig> = [
     component: Login
   },
   {
+    path: '/test',
+    name: 'Test',
+    component: Product
+  },
+  {
     path: '/about',
     name: 'About',
     // route level code-splitting
@@ -27,6 +34,7 @@ const routes: Array<RouteConfig> = [
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 

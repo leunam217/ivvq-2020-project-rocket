@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Service
 @DependsOn("passwordEncoder")
@@ -25,35 +27,40 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findOne(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).orElse(null);
     }
 
 
     @Override
     @Transactional
     public User save(User user) {
+
         //register
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        try {
-            User savedUser = userRepository.save(user);
+
+
+        Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
+        if(userOptional.isPresent()) {
+                throw new IllegalArgumentException("User with email "+ user.getEmail()+" already exists");
+            }
+
+           User savedUser = userRepository.save(user);
+            //return  userRepository.save(user);
 
             // initial Cart
-            ShoppingCart savedCart = cartRepository.save(new ShoppingCart(savedUser));
-            savedUser.setCart(savedCart);
-            return userRepository.save(savedUser);
+           ShoppingCart savedCart = cartRepository.save(new ShoppingCart(savedUser));
+           savedUser.setCart(savedCart);
 
-        } catch (Exception e) {
-            throw new IllegalArgumentException("ERROR");
-        }
+            return userRepository.save(savedUser);
 
     }
 
     @Override
     @Transactional
     public User update(User user) {
-        User oldUser = userRepository.findByEmail(user.getEmail());
-        oldUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        oldUser.setName(user.getName());
+        User oldUser = userRepository.findByEmail(user.getEmail()).orElse(null);
+       oldUser.setPassword(passwordEncoder.encode(user.getPassword()));
+       oldUser.setName(user.getName());
         oldUser.setPhone(user.getPhone());
         oldUser.setAddress(user.getAddress());
         return userRepository.save(oldUser);
