@@ -49,6 +49,15 @@ public class User implements Serializable {
     @JsonIgnore  // fix bi-direction toString() recursion problem
     private ShoppingCart cart;
 
+    public User(String email, String password, String name, String phone, String address)
+    {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+    }
+
 
     @Override
     public String toString() {
