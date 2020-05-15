@@ -1,0 +1,152 @@
+### Seller test
+GET {url}/product
+
+#####
+POST {url}/register
+{
+   "email": "bob@email.com",
+  "password": "secret",
+  "name": "bob",
+  "phone": "123",
+  "address": "Toulouse, France",
+  "role : "ROLE_SELLER"
+}
+
+######
+
+POST {url}/login
+
+Content-Type: application/json
+{
+   "username": "bobo@email.com",
+  "password": "secret"
+}
+
+####
+GET {url}/cart
+
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+#### not authorized
+
+POST {url}/seller/product/new
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productId": "A001",
+  "productName": "Livre",
+  "productPrice": 20.00,
+  "productStock": 100,
+  "productDescription": "some description",
+  "productIcon": "img"
+}
+##########
+POST {url}/seller/product/new
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productId": "A002",
+  "productName": "Livre",
+  "productPrice": 20.00,
+  "productStock": 100,
+  "productDescription": "some description",
+  "productIcon": "img"
+}
+###
+POST {url}/seller/product/A002/edit
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productId": "A002",
+  "productName": "Appareil photo",
+  "productPrice": 200.00,
+  "productStock": 50,
+  "productDescription": "some description",
+  "productIcon": "img"
+}
+
+### Customer test
+GET {url}/product
+Content-Type: application/json
+POST {url}/register
+{
+   "email": "malala@email.com",
+  "password": "secret",
+  "name": "Malala",
+  "phone": "123",
+  "address": "Toulouse, France"
+}
+### in the outpu, password is encode and a new customer is created
+
+POST {url}/login
+Content-Type: application/json
+{
+   "username": "malala@email.com",
+  "password": "secret"
+}
+
+### a jwt token is returned, copy the token in the postmann header to access to customer ressource
+
+GET {url}/cart
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+##### []
+
+POST {url}/cart/add
+Authorization: Bearer {{token}}
+{
+  "quantity": 2,
+  "productId": "A001"
+}
+
+#####
+
+GET {url}/cart
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### item is add in the  cart
+
+GET  {url}/order
+##########
+
+POST {url}/cart/checkout
+Authorization: Bearer {{token}}
+{
+  "cartNum": "342692378702576"
+}
+
+#### the order is placed, cartNum is valid
+
+GET  {url}/order
+Authorization: Bearer {{token}}
+########## the order is placed now
+
+POST {url}/seller/product/new
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productId": "A002",
+  "productName": "Livre",
+  "productPrice": 20.00,
+  "productStock": 100,
+  "productDescription": "some description",
+  "productIcon": "img"
+}
+
+### unauthorized
+
+###### SELLER
+
+GET {url}/order
+Authorization: Bearer {{token}}
+
+########
+
+PATCH {url}/finish/{order_id}
