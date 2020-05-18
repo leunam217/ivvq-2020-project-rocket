@@ -53,6 +53,7 @@ public class UserServiceTest {
 
         User savedUser = userService.save(user);
         ShoppingCart cart = shoppingCartRepository.save(new ShoppingCart(savedUser));
+
         savedUser.setCart(cart);
         assertThat(savedUser).isNotNull();
 
@@ -65,9 +66,11 @@ public class UserServiceTest {
     void should_throw_error_when_save_user_exist()
     {
         final User user = new User("bob@email.com",passwordEncoder.encode("secret"),"Bob","21345","Toulouse");
+
         given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
         assertThrows(IllegalArgumentException.class, () -> {
+
             userService.save(user);
         });
 
@@ -101,6 +104,7 @@ public class UserServiceTest {
         given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
 
         final User expectedUser = userService.findOne(email);
+
         assertThat(expectedUser).isNotNull();
 
     }

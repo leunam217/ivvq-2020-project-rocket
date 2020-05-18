@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 @Data
 @DynamicUpdate
 public class Product implements Serializable {
+
     @Id
     private String productId;
 
@@ -43,7 +44,14 @@ public class Product implements Serializable {
 
     private String productIcon;
 
-
+    public Product(String productId, String productName, BigDecimal productPrice, Integer productStock, String productDescription)
+    {
+        this.productId = productId;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productStock = productStock;
+        this.productDescription = productDescription;
+    }
     public Product() {
     }
 
