@@ -12,8 +12,6 @@
         <v-col>
           <Product></Product>
         </v-col>
-      </v-row>
-      <v-row>
         <v-col>
           <Product></Product>
         </v-col>
@@ -23,14 +21,13 @@
         <v-col>
           <Product></Product>
         </v-col>
-      </v-row>
-      <v-row justify="start">
         <v-col>
           <Product></Product>
         </v-col>
         <v-col>
           <Product></Product>
         </v-col>
+
       </v-row>
     </v-container>
 
@@ -43,7 +40,7 @@
 <script>
 // @ is an alias to /src
 import Product from "@/components/Product";
-import Toolbar from "@/components/Toolbar";
+import Toolbar from "@/components/toolbar/Toolbar";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({

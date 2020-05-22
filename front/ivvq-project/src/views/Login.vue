@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Toolbar from "@/components/Toolbar.vue";
+import Toolbar from "@/components/toolbar/Toolbar.vue";
 import LoginForm from "@/components/login/LoginForm.vue";
 import { Component, Vue } from "vue-property-decorator";
 
