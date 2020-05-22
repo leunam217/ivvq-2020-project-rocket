@@ -5,7 +5,7 @@
     </div>
     <v-spacer></v-spacer>
 
-    <LoginForm class="align-self-center"> </LoginForm>
+    <PaymentForm class="align-self-center"> </PaymentForm>
     <v-spacer></v-spacer>
     <v-spacer></v-spacer>
 
@@ -14,14 +14,14 @@
 
 <script>
 import Toolbar from "@/components/toolbar/Toolbar.vue";
-import LoginForm from "@/components/login/LoginForm.vue";
+import PaymentForm from "@/components/PaymentForm.vue";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
     Toolbar,
-    LoginForm
+    PaymentForm
   }
 })
-export default class Login extends Vue {}
+export default class Payment extends Vue {}
 </script>
