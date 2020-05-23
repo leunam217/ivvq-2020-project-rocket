@@ -3,7 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '@/views/Login.vue'
 import Product from '@/components/Product.vue'
-
+import Payment from '@/views/Payment.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +22,11 @@ const routes: Array<RouteConfig> = [
     path: '/test',
     name: 'Test',
     component: Product
+  },
+  {
+    path: '/pay',
+    name: 'Pay',
+    component: Payment
   },
   {
     path: '/about',
