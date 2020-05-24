@@ -1,6 +1,7 @@
 package com.teamrocket.projetdevop.ivvqproject.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.teamrocket.projetdevop.ivvqproject.util.UserRoleEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
@@ -43,7 +44,7 @@ public class User implements Serializable {
     private boolean active = true;
 
     @NotEmpty
-    private String role = "ROLE_CUSTOMER";
+    private String role = UserRoleEnum.ROLE_CUSTOMER.toString();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore  // fix bi-direction toString() recursion problem

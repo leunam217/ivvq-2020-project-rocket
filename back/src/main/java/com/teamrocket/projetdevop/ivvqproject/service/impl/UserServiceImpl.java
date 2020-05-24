@@ -25,6 +25,30 @@ public class UserServiceImpl implements UserService {
     @Autowired
     ShoppingCartRepository cartRepository;
 
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
+
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public ShoppingCartRepository getCartRepository() {
+        return cartRepository;
+    }
+
+    public void setCartRepository(ShoppingCartRepository cartRepository) {
+        this.cartRepository = cartRepository;
+    }
+
     @Override
     public User findOne(String email) {
         return userRepository.findByEmail(email).orElse(null);
