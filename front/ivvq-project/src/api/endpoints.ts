@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.22.595 on 2020-05-24 14:37:57.
+// Generated using typescript-generator version 2.22.595 on 2020-05-25 22:45:14.
 
 export interface Order extends Serializable {
     orderId: number;
@@ -83,41 +83,25 @@ export interface HttpClient<O> {
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; options?: O; }): RestResponse<R>;
 }
 
-export class OrderControllerClient<O> {
+export class UserControllerClient<O> {
 
     constructor(protected httpClient: HttpClient<O>) {
     }
 
     /**
-     * HTTP GET /order
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.orderHistoric
+     * HTTP POST /login
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.UserController.login
      */
-    orderHistoric(options?: O): RestResponse<Order[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`order`, options: options });
+    login(authentificationForm: AuthentificationForm, options?: O): RestResponse<any> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`login`, data: authentificationForm, options: options });
     }
 
     /**
-     * HTTP PATCH /order/cancel/{id}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.cancelOrder
+     * HTTP POST /register
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.UserController.save
      */
-    cancelOrder(id: number, options?: O): RestResponse<Order> {
-        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/cancel/${id}`, options: options });
-    }
-
-    /**
-     * HTTP PATCH /order/finish/{id}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.finishOrder
-     */
-    finishOrder(id: number, options?: O): RestResponse<Order> {
-        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/finish/${id}`, options: options });
-    }
-
-    /**
-     * HTTP GET /order/{id}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.showOneOrder
-     */
-    showOneOrder(id: number, options?: O): RestResponse<ResponseEntity<any>> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`order/${id}`, options: options });
+    save(user: User, options?: O): RestResponse<User> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`register`, data: user, options: options });
     }
 }
 
@@ -172,6 +156,44 @@ export class ShoppingCartControllerClient<O> {
      */
     modifyItem(itemId: string, quantity: number, options?: O): RestResponse<ProductOrdered> {
         return this.httpClient.request({ method: "PUT", url: uriEncoding`cart/${itemId}`, data: quantity, options: options });
+    }
+}
+
+export class OrderControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /order
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.orderHistoric
+     */
+    orderHistoric(options?: O): RestResponse<Order[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`order`, options: options });
+    }
+
+    /**
+     * HTTP PATCH /order/cancel/{id}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.cancelOrder
+     */
+    cancelOrder(id: number, options?: O): RestResponse<Order> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/cancel/${id}`, options: options });
+    }
+
+    /**
+     * HTTP PATCH /order/finish/{id}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.finishOrder
+     */
+    finishOrder(id: number, options?: O): RestResponse<Order> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/finish/${id}`, options: options });
+    }
+
+    /**
+     * HTTP GET /order/{id}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.showOneOrder
+     */
+    showOneOrder(id: number, options?: O): RestResponse<ResponseEntity<any>> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`order/${id}`, options: options });
     }
 }
 
@@ -232,28 +254,6 @@ export class HelloControllerClient<O> {
      */
     index(options?: O): RestResponse<string> {
         return this.httpClient.request({ method: "GET", url: uriEncoding``, options: options });
-    }
-}
-
-export class UserControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP POST /login
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.UserController.login
-     */
-    login(authentificationForm: AuthentificationForm, options?: O): RestResponse<any> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`login`, data: authentificationForm, options: options });
-    }
-
-    /**
-     * HTTP POST /register
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.UserController.save
-     */
-    save(user: User, options?: O): RestResponse<User> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`register`, data: user, options: options });
     }
 }
 
@@ -319,7 +319,7 @@ class AxiosHttpClient implements HttpClient<Axios.AxiosRequestConfig> {
     }
 }
 
-export class AxiosOrderControllerClient extends OrderControllerClient<Axios.AxiosRequestConfig> {
+export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
@@ -328,6 +328,14 @@ export class AxiosOrderControllerClient extends OrderControllerClient<Axios.Axio
 }
 
 export class AxiosShoppingCartControllerClient extends ShoppingCartControllerClient<Axios.AxiosRequestConfig> {
+
+    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
+        axiosInstance.defaults.baseURL = baseURL;
+        super(new AxiosHttpClient(axiosInstance));
+    }
+}
+
+export class AxiosOrderControllerClient extends OrderControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
@@ -344,14 +352,6 @@ export class AxiosProductControllerClient extends ProductControllerClient<Axios.
 }
 
 export class AxiosHelloControllerClient extends HelloControllerClient<Axios.AxiosRequestConfig> {
-
-    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
-        axiosInstance.defaults.baseURL = baseURL;
-        super(new AxiosHttpClient(axiosInstance));
-    }
-}
-
-export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
