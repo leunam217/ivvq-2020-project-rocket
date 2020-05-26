@@ -4,6 +4,15 @@
 * Jonathan LAO-KAN
 * Manuel CABARCOS-BAULINA
 
+### Lancement de l'application en local
+
+```sh
+$ docker-compose up -d
+```
+
+### URL de l'application déployée sur Heroku
+* <https://rocket-ivvq-project.herokuapp.com/>
+
 # Rocket Shop Application
 Application de commerce électronique développée pour effectuer des opérations de rôle d'utilisateur admin et client avec les interfaces utilisateurs respectives.
 
