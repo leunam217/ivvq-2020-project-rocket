@@ -7,6 +7,7 @@
       v-if="getError() !== undefined"
       type="error"
       :dismissible="true"
+      @input="onCloseError"
     >
       {{getError()}}
     </v-alert>
@@ -37,5 +38,6 @@ import { UserApi } from "../api/wrapper";
 export default class Register extends Vue {
   getError = () => RegisterModule.getState.error;
   registerf = u => UserApi.register(u);
+  onCloseError = RegisterModule.cleanError;
 }
 </script>

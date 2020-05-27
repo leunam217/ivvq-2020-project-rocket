@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.22.595 on 2020-05-27 13:59:04.
+// Generated using typescript-generator version 2.22.595 on 2020-05-27 19:58:25.
 
 export interface Order extends Serializable {
     orderId: number;
@@ -83,6 +83,52 @@ export interface HttpClient<O> {
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; options?: O; }): RestResponse<R>;
 }
 
+export class ProductControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /product
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ProductController.findAllProduct
+     */
+    findAllProduct(options?: O): RestResponse<Product[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`product`, options: options });
+    }
+
+    /**
+     * HTTP GET /product/{productId}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ProductController.showOneProduct
+     */
+    showOneProduct(productId: string, options?: O): RestResponse<Product> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`product/${productId}`, options: options });
+    }
+
+    /**
+     * HTTP POST /seller/product/new
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ProductController.createProduct
+     */
+    createProduct(product: Product, options?: O): RestResponse<ResponseEntity<any>> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`seller/product/new`, data: product, options: options });
+    }
+
+    /**
+     * HTTP DELETE /seller/product/{id}/delete
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ProductController.deleteProduct
+     */
+    deleteProduct(id: string, options?: O): RestResponse<ResponseEntity<any>> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`seller/product/${id}/delete`, options: options });
+    }
+
+    /**
+     * HTTP PUT /seller/product/{id}/edit
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ProductController.editProduct
+     */
+    editProduct(id: string, product: Product, options?: O): RestResponse<ResponseEntity<any>> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`seller/product/${id}/edit`, data: product, options: options });
+    }
+}
+
 export class UserControllerClient<O> {
 
     constructor(protected httpClient: HttpClient<O>) {
@@ -102,6 +148,58 @@ export class UserControllerClient<O> {
      */
     save(user: User, options?: O): RestResponse<User> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`register`, data: user, options: options });
+    }
+}
+
+export class HelloControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.HelloController.index
+     */
+    index(options?: O): RestResponse<string> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding``, options: options });
+    }
+}
+
+export class OrderControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /order
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.orderHistoric
+     */
+    orderHistoric(options?: O): RestResponse<Order[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`order`, options: options });
+    }
+
+    /**
+     * HTTP PATCH /order/cancel/{id}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.cancelOrder
+     */
+    cancelOrder(id: number, options?: O): RestResponse<Order> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/cancel/${id}`, options: options });
+    }
+
+    /**
+     * HTTP PATCH /order/finish/{id}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.finishOrder
+     */
+    finishOrder(id: number, options?: O): RestResponse<Order> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/finish/${id}`, options: options });
+    }
+
+    /**
+     * HTTP GET /order/{id}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.showOneOrder
+     */
+    showOneOrder(id: number, options?: O): RestResponse<ResponseEntity<any>> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`order/${id}`, options: options });
     }
 }
 
@@ -156,104 +254,6 @@ export class ShoppingCartControllerClient<O> {
      */
     modifyItem(itemId: string, quantity: number, options?: O): RestResponse<ProductOrdered> {
         return this.httpClient.request({ method: "PUT", url: uriEncoding`cart/${itemId}`, data: quantity, options: options });
-    }
-}
-
-export class OrderControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /order
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.orderHistoric
-     */
-    orderHistoric(options?: O): RestResponse<Order[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`order`, options: options });
-    }
-
-    /**
-     * HTTP PATCH /order/cancel/{id}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.cancelOrder
-     */
-    cancelOrder(id: number, options?: O): RestResponse<Order> {
-        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/cancel/${id}`, options: options });
-    }
-
-    /**
-     * HTTP PATCH /order/finish/{id}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.finishOrder
-     */
-    finishOrder(id: number, options?: O): RestResponse<Order> {
-        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/finish/${id}`, options: options });
-    }
-
-    /**
-     * HTTP GET /order/{id}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.showOneOrder
-     */
-    showOneOrder(id: number, options?: O): RestResponse<ResponseEntity<any>> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`order/${id}`, options: options });
-    }
-}
-
-export class ProductControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /product
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ProductController.findAllProduct
-     */
-    findAllProduct(options?: O): RestResponse<Product[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`product`, options: options });
-    }
-
-    /**
-     * HTTP GET /product/{productId}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ProductController.showOneProduct
-     */
-    showOneProduct(productId: string, options?: O): RestResponse<Product> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`product/${productId}`, options: options });
-    }
-
-    /**
-     * HTTP POST /seller/product/new
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ProductController.createProduct
-     */
-    createProduct(product: Product, options?: O): RestResponse<ResponseEntity<any>> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`seller/product/new`, data: product, options: options });
-    }
-
-    /**
-     * HTTP DELETE /seller/product/{id}/delete
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ProductController.deleteProduct
-     */
-    deleteProduct(id: string, options?: O): RestResponse<ResponseEntity<any>> {
-        return this.httpClient.request({ method: "DELETE", url: uriEncoding`seller/product/${id}/delete`, options: options });
-    }
-
-    /**
-     * HTTP PUT /seller/product/{id}/edit
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ProductController.editProduct
-     */
-    editProduct(id: string, product: Product, options?: O): RestResponse<ResponseEntity<any>> {
-        return this.httpClient.request({ method: "PUT", url: uriEncoding`seller/product/${id}/edit`, data: product, options: options });
-    }
-}
-
-export class HelloControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.HelloController.index
-     */
-    index(options?: O): RestResponse<string> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding``, options: options });
     }
 }
 
@@ -319,6 +319,14 @@ class AxiosHttpClient implements HttpClient<Axios.AxiosRequestConfig> {
     }
 }
 
+export class AxiosProductControllerClient extends ProductControllerClient<Axios.AxiosRequestConfig> {
+
+    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
+        axiosInstance.defaults.baseURL = baseURL;
+        super(new AxiosHttpClient(axiosInstance));
+    }
+}
+
 export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
@@ -327,7 +335,7 @@ export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosR
     }
 }
 
-export class AxiosShoppingCartControllerClient extends ShoppingCartControllerClient<Axios.AxiosRequestConfig> {
+export class AxiosHelloControllerClient extends HelloControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
@@ -343,15 +351,7 @@ export class AxiosOrderControllerClient extends OrderControllerClient<Axios.Axio
     }
 }
 
-export class AxiosProductControllerClient extends ProductControllerClient<Axios.AxiosRequestConfig> {
-
-    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
-        axiosInstance.defaults.baseURL = baseURL;
-        super(new AxiosHttpClient(axiosInstance));
-    }
-}
-
-export class AxiosHelloControllerClient extends HelloControllerClient<Axios.AxiosRequestConfig> {
+export class AxiosShoppingCartControllerClient extends ShoppingCartControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
