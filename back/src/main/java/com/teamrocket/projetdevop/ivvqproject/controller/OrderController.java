@@ -6,6 +6,7 @@ import com.teamrocket.projetdevop.ivvqproject.domain.Order;
 
 import com.teamrocket.projetdevop.ivvqproject.service.OrderService;
 import com.teamrocket.projetdevop.ivvqproject.service.UserService;
+import com.teamrocket.projetdevop.ivvqproject.util.UserRoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class OrderController {
     public List<Order> orderHistoric(Authentication authentication) {
 
         List<Order> order;
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(UserRoleEnum.ROLE_CUSTOMER.toString()))) {
             order = orderService.findByBuyerEmail(authentication.getName());
         } else {
             order = orderService.findAll();
@@ -41,7 +42,7 @@ public class OrderController {
     @PatchMapping("/order/cancel/{id}")
     public ResponseEntity<Order> cancelOrder(@PathVariable("id") Long orderId, Authentication authentication) {
         Order order = orderService.findOne(orderId);
-        if (!authentication.getName().equals(order.getBuyerEmail()) && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
+        if (!authentication.getName().equals(order.getBuyerEmail()) && authentication.getAuthorities().contains(new SimpleGrantedAuthority(UserRoleEnum.ROLE_CUSTOMER.toString()))) {
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -50,7 +51,7 @@ public class OrderController {
 
     @PatchMapping("/order/finish/{id}")
     public ResponseEntity<Order> finishOrder(@PathVariable("id") Long orderId, Authentication authentication) {
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"))) {
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(UserRoleEnum.ROLE_CUSTOMER.toString()))) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(orderService.finish(orderId));
@@ -58,7 +59,7 @@ public class OrderController {
 
     @GetMapping("/order/{id}")
     public ResponseEntity showOneOrder(@PathVariable("id") Long orderId, Authentication authentication) {
-        boolean isCustomer = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+        boolean isCustomer = authentication.getAuthorities().contains(new SimpleGrantedAuthority(UserRoleEnum.ROLE_CUSTOMER.toString()));
         Order order = orderService.findOne(orderId);
         if (isCustomer && !authentication.getName().equals(order.getBuyerEmail())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
