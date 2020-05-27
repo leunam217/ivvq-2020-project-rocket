@@ -20,8 +20,10 @@ import java.util.ArrayList;
 
 @Component
 public class JsonWebTokenFilter extends OncePerRequestFilter {
+
     @Autowired
     private JsonWebTokenProvider jsonWebTokenProvider;
+
     @Autowired
     private UserService userService;
 

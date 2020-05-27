@@ -7,24 +7,25 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 public class ItemForm {
+
     @Min(value = 1)
     private Integer quantity;
+
     @NotEmpty
     private String productId;
 
-    public Integer getQuantity() {
-        return quantity;
+    public ItemForm(Integer quantity, String productId)
+    {
+        this.quantity = quantity;
+        this.productId = productId;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public Integer getQuantity() {
+        return quantity;
     }
 
     public String getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
 }

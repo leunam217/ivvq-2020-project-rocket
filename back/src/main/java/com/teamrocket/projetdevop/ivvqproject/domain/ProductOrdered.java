@@ -8,13 +8,13 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 
 @Entity
 @Data
-@NoArgsConstructor
 public class ProductOrdered {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,6 +53,7 @@ public class ProductOrdered {
 
     @Min(1)
     private Integer count;
+
 
 
     public ProductOrdered(Product product, Integer quantity) {
@@ -94,6 +95,7 @@ public class ProductOrdered {
                 Objects.equals(productPrice, that.productPrice);
     }
 
+    public ProductOrdered(){}
     @Override
     public int hashCode() {
 
@@ -104,6 +106,18 @@ public class ProductOrdered {
         return id;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public String getProductDescription() {
+        return productDescription;
+    }
+
+
+    public Integer getProductStock() {
+        return productStock;
+    }
 
     public void setCart(ShoppingCart cart) {
         this.cart = cart;
