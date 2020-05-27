@@ -13,6 +13,7 @@ COPY back/src src
 COPY --from=front /src/dist/ /app/src/main/resources/public/
 ARG appversion
 RUN mvn package -DskipTests && cp /app/target/ivvq-project-$appversion.jar ./myApp.jar
+RUN mvn spotbugs:check
 
 # Runtime
 FROM openjdk:8-jre-alpine
