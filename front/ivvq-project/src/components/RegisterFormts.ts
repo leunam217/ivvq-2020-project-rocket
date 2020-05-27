@@ -35,7 +35,7 @@ export class Register extends VuexModule {
     public setSate(newSate: stateType): void {
         this.mState = newSate;
     }
-    @Action
+    @Action({ rawError: true })
     public updateSate(newSate: stateType) {
         this.setSate(newSate)
     }
@@ -43,16 +43,16 @@ export class Register extends VuexModule {
         return this.mState;
     }
 
-    @Action
-    public async register(user: User, register: (user: User) => Promise<Result<User, any>>) {
-        const result = await register(user);
+    @Action({ rawError: true })
+    public async register({ user, registerf }: { user: User; registerf: (user: User) => Promise<Result<User, unknown>> }) {
+        const result = await registerf(user);
         switch (result.type) {
             case "Err": this.setSate({ ...this.getState, error: result.value }); break;
             case "Ok": this.setSate({ ...this.getState, registred: true })
         }
     }
 
-    @Action
+    @Action({ rawError: true })
     public cleanError() {
         this.setSate({ ...this.getState, error: undefined });
     }

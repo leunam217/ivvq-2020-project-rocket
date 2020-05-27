@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": " cd ../../back && mvn cz.habarta.typescript-generator:typescript-generator-maven-plugin:2.22.595:generate && cd ../front/ivvq-project && vue-cli-service build",
+    "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"

@@ -1,6 +1,6 @@
 import { AxiosUserControllerClient, User, RestResponse } from './endpoints'
 
-const baseUrl = "localhost:8080/api/"
+const baseUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port
 
 export type Result<T, E> = Ok<T> | Err<E>
 

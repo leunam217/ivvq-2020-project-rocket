@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.22.595 on 2020-05-25 22:45:14.
+// Generated using typescript-generator version 2.22.595 on 2020-05-27 13:59:04.
 
 export interface Order extends Serializable {
     orderId: number;

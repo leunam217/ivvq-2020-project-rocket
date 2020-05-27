@@ -13,7 +13,7 @@
     <v-spacer></v-spacer>
     <RegisterForm
       class="align-self-center"
-      :register="register"
+      :registerf="registerf"
     > </RegisterForm>
     <v-spacer></v-spacer>
     <v-spacer></v-spacer>
@@ -34,8 +34,8 @@ import { UserApi } from "../api/wrapper";
     RegisterForm
   }
 })
-export default class Payment extends Vue {
+export default class Register extends Vue {
   getError = () => RegisterModule.getState.error;
-  register = u => UserApi.register(u);
+  registerf = u => UserApi.register(u);
 }
 </script>

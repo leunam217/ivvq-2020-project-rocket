@@ -46,7 +46,7 @@
       <v-spacer></v-spacer>
       <v-btn
         color="orange"
-        @click="register()"
+        @click="() => doRegister()"
       >Register</v-btn>
       <v-spacer></v-spacer>
     </v-card-actions>
@@ -62,7 +62,7 @@ import { Result } from "../api/wrapper";
 
 @Component
 export default class RegisterForm extends Vue {
-  @Prop({ required: true }) register!: (
+  @Prop({ required: true }) registerf!: (
     user: User
   ) => Promise<Result<User, unknown>>;
 
@@ -85,7 +85,8 @@ export default class RegisterForm extends Vue {
       active: true,
       role: "ROLE_CUSTOMER"
     };
-    RegisterModule.register(user, this.register);
+    console.log(this.registerf);
+    RegisterModule.register({ user, registerf: this.registerf });
   }
 }
 </script>
