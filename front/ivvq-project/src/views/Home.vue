@@ -4,7 +4,12 @@
     <v-container class="align-self-center">
       <v-row>
         <v-col>
-          <Product></Product>
+          <router-link
+            to=/register>
+            <Product
+          >
+            </Product>
+          </router-link>
         </v-col>
         <v-col>
           <Product></Product>
