@@ -39,7 +39,6 @@ public class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-
     @Test
     void should_save_user_successfully(){
 

@@ -20,7 +20,6 @@ import java.util.Set;
 
 @Entity(name = "orders")
 @Data
-@NoArgsConstructor
 @DynamicUpdate
 public class Order implements Serializable {
     private static final long serialVersionUID = -3819883511505235030L;
@@ -47,8 +46,6 @@ public class Order implements Serializable {
     @NotEmpty
     private String buyerAddress;
 
-    // Total Amount
-    @NotNull
     private BigDecimal orderAmount;
 
     private String orderStatus;
@@ -64,13 +61,15 @@ public class Order implements Serializable {
         this.buyerName = buyer.getName();
         this.buyerPhone = buyer.getPhone();
         this.buyerAddress = buyer.getAddress();
-        this.orderAmount = buyer.getCart().getProducts().stream().map(item -> item.getProductPrice().multiply(new BigDecimal(item.getCount())))
-                .reduce(BigDecimal::add)
-                .orElse(new BigDecimal(0));
+       this.orderAmount = buyer.getCart().getProducts().stream().map(item -> item.getProductPrice().multiply(new BigDecimal(item.getCount())))
+               .reduce(BigDecimal::add)
+             .orElse(new BigDecimal(0));
         this.orderStatus = "";
 
     }
 
+
+    public Order(){}
     public String getOrderStatus() {
         return orderStatus;
     }
@@ -83,72 +82,46 @@ public class Order implements Serializable {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
     public Set<ProductOrdered> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<ProductOrdered> products) {
-        this.products = products;
-    }
 
     public String getBuyerEmail() {
         return buyerEmail;
-    }
-
-    public void setBuyerEmail(String buyerEmail) {
-        this.buyerEmail = buyerEmail;
     }
 
     public String getBuyerName() {
         return buyerName;
     }
 
-    public void setBuyerName(String buyerName) {
-        this.buyerName = buyerName;
-    }
-
     public String getBuyerPhone() {
         return buyerPhone;
-    }
-
-    public void setBuyerPhone(String buyerPhone) {
-        this.buyerPhone = buyerPhone;
     }
 
     public String getBuyerAddress() {
         return buyerAddress;
     }
 
-    public void setBuyerAddress(String buyerAddress) {
-        this.buyerAddress = buyerAddress;
-    }
-
     public BigDecimal getOrderAmount() {
         return orderAmount;
     }
+
 
     public void setOrderAmount(BigDecimal orderAmount) {
         this.orderAmount = orderAmount;
     }
 
+    public void setProducts(Set<ProductOrdered> products) {
+        this.products = products;
+    }
 
     public LocalDateTime getCreateTime() {
         return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
     }
 
     public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
 }

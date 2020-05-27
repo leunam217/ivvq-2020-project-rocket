@@ -12,7 +12,6 @@ import java.util.Set;
 
 @Data
 @Entity
-@NoArgsConstructor
 public class ShoppingCart implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,18 +34,11 @@ public class ShoppingCart implements Serializable {
                 '}';
     }
 
+    public ShoppingCart() {}
     public ShoppingCart(User user) {
         this.user  = user;
     }
 
-
-    public long getCartId() {
-        return cartId;
-    }
-
-    public void setCartId(long cartId) {
-        this.cartId = cartId;
-    }
 
     public User getUser() {
         return user;
