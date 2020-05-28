@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.22.595 on 2020-05-27 19:58:25.
+// Generated using typescript-generator version 2.22.595 on 2020-05-28 14:11:34.
 
 export interface Order extends Serializable {
     orderId: number;
@@ -43,7 +43,7 @@ export interface ShoppingCart extends Serializable {
     products: ProductOrdered[];
 }
 
-export interface ProductOrdered {
+export interface ProductOrdered extends Serializable {
     id: number;
     productId: string;
     productName: string;
@@ -57,6 +57,14 @@ export interface ProductOrdered {
 export interface AuthentificationForm {
     username: string;
     password: string;
+}
+
+export interface JwtResponse {
+    token: string;
+    type: string;
+    account: string;
+    name: string;
+    role: string;
 }
 
 export interface User extends Serializable {
@@ -81,6 +89,98 @@ export interface HttpEntity<T> {
 export interface HttpClient<O> {
 
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; options?: O; }): RestResponse<R>;
+}
+
+export class ShoppingCartControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP POST /cart
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.finalCart
+     */
+    finalCart(productInOrders: ProductOrdered[], options?: O): RestResponse<ShoppingCart> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`cart`, data: productInOrders, options: options });
+    }
+
+    /**
+     * HTTP GET /cart
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.getCart
+     */
+    getCart(options?: O): RestResponse<ShoppingCart> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`cart`, options: options });
+    }
+
+    /**
+     * HTTP POST /cart/add
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.addItemToCart
+     */
+    addItemToCart(form: ItemForm, options?: O): RestResponse<boolean> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`cart/add`, data: form, options: options });
+    }
+
+    /**
+     * HTTP POST /cart/checkout
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.checkoutCart
+     */
+    checkoutCart(luhnAlgorithm: LuhnAlgorithm, options?: O): RestResponse<ResponseEntity<any>> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`cart/checkout`, data: luhnAlgorithm, options: options });
+    }
+
+    /**
+     * HTTP DELETE /cart/{itemId}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.deleteItem
+     */
+    deleteItem(itemId: string, options?: O): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`cart/${itemId}`, options: options });
+    }
+
+    /**
+     * HTTP PUT /cart/{itemId}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.modifyItem
+     */
+    modifyItem(itemId: string, quantity: number, options?: O): RestResponse<ProductOrdered> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`cart/${itemId}`, data: quantity, options: options });
+    }
+}
+
+export class OrderControllerClient<O> {
+
+    constructor(protected httpClient: HttpClient<O>) {
+    }
+
+    /**
+     * HTTP GET /order
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.orderHistoric
+     */
+    orderHistoric(options?: O): RestResponse<Order[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`order`, options: options });
+    }
+
+    /**
+     * HTTP PATCH /order/cancel/{id}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.cancelOrder
+     */
+    cancelOrder(id: number, options?: O): RestResponse<Order> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/cancel/${id}`, options: options });
+    }
+
+    /**
+     * HTTP PATCH /order/finish/{id}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.finishOrder
+     */
+    finishOrder(id: number, options?: O): RestResponse<Order> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/finish/${id}`, options: options });
+    }
+
+    /**
+     * HTTP GET /order/{id}
+     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.showOneOrder
+     */
+    showOneOrder(id: number, options?: O): RestResponse<ResponseEntity<any>> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`order/${id}`, options: options });
+    }
 }
 
 export class ProductControllerClient<O> {
@@ -138,7 +238,7 @@ export class UserControllerClient<O> {
      * HTTP POST /login
      * Java method: com.teamrocket.projetdevop.ivvqproject.controller.UserController.login
      */
-    login(authentificationForm: AuthentificationForm, options?: O): RestResponse<any> {
+    login(authentificationForm: AuthentificationForm, options?: O): RestResponse<JwtResponse> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`login`, data: authentificationForm, options: options });
     }
 
@@ -148,112 +248,6 @@ export class UserControllerClient<O> {
      */
     save(user: User, options?: O): RestResponse<User> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`register`, data: user, options: options });
-    }
-}
-
-export class HelloControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.HelloController.index
-     */
-    index(options?: O): RestResponse<string> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding``, options: options });
-    }
-}
-
-export class OrderControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP GET /order
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.orderHistoric
-     */
-    orderHistoric(options?: O): RestResponse<Order[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`order`, options: options });
-    }
-
-    /**
-     * HTTP PATCH /order/cancel/{id}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.cancelOrder
-     */
-    cancelOrder(id: number, options?: O): RestResponse<Order> {
-        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/cancel/${id}`, options: options });
-    }
-
-    /**
-     * HTTP PATCH /order/finish/{id}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.finishOrder
-     */
-    finishOrder(id: number, options?: O): RestResponse<Order> {
-        return this.httpClient.request({ method: "PATCH", url: uriEncoding`order/finish/${id}`, options: options });
-    }
-
-    /**
-     * HTTP GET /order/{id}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.OrderController.showOneOrder
-     */
-    showOneOrder(id: number, options?: O): RestResponse<ResponseEntity<any>> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`order/${id}`, options: options });
-    }
-}
-
-export class ShoppingCartControllerClient<O> {
-
-    constructor(protected httpClient: HttpClient<O>) {
-    }
-
-    /**
-     * HTTP POST /cart
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.finalCart
-     */
-    finalCart(productInOrders: ProductOrdered[], options?: O): RestResponse<ShoppingCart> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`cart`, data: productInOrders, options: options });
-    }
-
-    /**
-     * HTTP GET /cart
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.getCart
-     */
-    getCart(options?: O): RestResponse<ShoppingCart> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`cart`, options: options });
-    }
-
-    /**
-     * HTTP POST /cart/add
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.addItemToCart
-     */
-    addItemToCart(form: ItemForm, options?: O): RestResponse<boolean> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`cart/add`, data: form, options: options });
-    }
-
-    /**
-     * HTTP POST /cart/checkout
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.checkoutCart
-     */
-    checkoutCart(luhnAlgorithm: LuhnAlgorithm, options?: O): RestResponse<ResponseEntity<any>> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`cart/checkout`, data: luhnAlgorithm, options: options });
-    }
-
-    /**
-     * HTTP DELETE /cart/{itemId}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.deleteItem
-     */
-    deleteItem(itemId: string, options?: O): RestResponse<void> {
-        return this.httpClient.request({ method: "DELETE", url: uriEncoding`cart/${itemId}`, options: options });
-    }
-
-    /**
-     * HTTP PUT /cart/{itemId}
-     * Java method: com.teamrocket.projetdevop.ivvqproject.controller.ShoppingCartController.modifyItem
-     */
-    modifyItem(itemId: string, quantity: number, options?: O): RestResponse<ProductOrdered> {
-        return this.httpClient.request({ method: "PUT", url: uriEncoding`cart/${itemId}`, data: quantity, options: options });
     }
 }
 
@@ -319,23 +313,7 @@ class AxiosHttpClient implements HttpClient<Axios.AxiosRequestConfig> {
     }
 }
 
-export class AxiosProductControllerClient extends ProductControllerClient<Axios.AxiosRequestConfig> {
-
-    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
-        axiosInstance.defaults.baseURL = baseURL;
-        super(new AxiosHttpClient(axiosInstance));
-    }
-}
-
-export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosRequestConfig> {
-
-    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
-        axiosInstance.defaults.baseURL = baseURL;
-        super(new AxiosHttpClient(axiosInstance));
-    }
-}
-
-export class AxiosHelloControllerClient extends HelloControllerClient<Axios.AxiosRequestConfig> {
+export class AxiosShoppingCartControllerClient extends ShoppingCartControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
@@ -351,7 +329,15 @@ export class AxiosOrderControllerClient extends OrderControllerClient<Axios.Axio
     }
 }
 
-export class AxiosShoppingCartControllerClient extends ShoppingCartControllerClient<Axios.AxiosRequestConfig> {
+export class AxiosProductControllerClient extends ProductControllerClient<Axios.AxiosRequestConfig> {
+
+    constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
+        axiosInstance.defaults.baseURL = baseURL;
+        super(new AxiosHttpClient(axiosInstance));
+    }
+}
+
+export class AxiosUserControllerClient extends UserControllerClient<Axios.AxiosRequestConfig> {
 
     constructor(baseURL: string, axiosInstance: Axios.AxiosInstance = axios.create()) {
         axiosInstance.defaults.baseURL = baseURL;
