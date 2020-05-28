@@ -1,48 +1,32 @@
 package com.teamrocket.projetdevop.ivvqproject.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.teamrocket.projetdevop.ivvqproject.domain.Product;
-import com.teamrocket.projetdevop.ivvqproject.domain.User;
-import com.teamrocket.projetdevop.ivvqproject.repositories.UserRepository;
-import com.teamrocket.projetdevop.ivvqproject.security.JWT.JsonWebTokenFilter;
-import com.teamrocket.projetdevop.ivvqproject.security.JWT.JsonWebTokenProvider;
-import com.teamrocket.projetdevop.ivvqproject.security.config.SpringSecurityConfig;
-import com.teamrocket.projetdevop.ivvqproject.service.ProductService;
+
 import com.teamrocket.projetdevop.ivvqproject.service.impl.ProductServiceImpl;
 import com.teamrocket.projetdevop.ivvqproject.utils.AbstractRestControllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JacksonJsonParser;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.security.web.FilterChainProxy;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.context.WebApplicationContext;
-import org.testcontainers.shaded.org.apache.commons.codec.binary.Base64;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+
+
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,27 +34,24 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 
 
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class ProductControllerTest extends AbstractRestControllerTest{
 
     @MockBean
-    ProductService productService;
+    ProductServiceImpl productService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -78,12 +59,18 @@ public class ProductControllerTest extends AbstractRestControllerTest{
 
     private List<Product> productList;
 
+    private ProductController productController;
+
+    @MockBean
+    private Product product;
+
     @BeforeEach
     void setup() {
 
-
+        productController = new ProductController();
+        this.product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc");
         this.productList = new ArrayList<>();
-        this.productList.add(new Product("B001", "Rocket", new BigDecimal(123), 100,"desc"));
+        this.productList.add(product);
         this.productList.add(new Product("B002", "Rocket1", new BigDecimal(123), 100,"desc"));
         this.productList.add(new Product("B003", "Rocket2", new BigDecimal(123), 100,"desc"));
 
@@ -91,6 +78,7 @@ public class ProductControllerTest extends AbstractRestControllerTest{
 
     @Test
     void should_fetch_all_products() throws Exception {
+
         given(productService.findAll()).willReturn(productList);
 
         getMockMvc().perform(get("/product"))
@@ -105,7 +93,7 @@ public class ProductControllerTest extends AbstractRestControllerTest{
         final String productId = "B001";
         final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc");
 
-        given(productService.findOne(productId)).willReturn(Optional.of(product).get());
+        given(productService.findOne(productId)).willReturn(product);
 
         getMockMvc().perform(get("/product/{productId}", productId))
                 .andExpect(status().isOk())
@@ -118,8 +106,9 @@ public class ProductControllerTest extends AbstractRestControllerTest{
 
     @Test
     void add_product() throws Exception {
-        given(productService.save(any(Product.class))).willAnswer((invocation) -> invocation.getArgument(0));
-        Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc");
+
+      given(productService.save(any(Product.class))).willAnswer((invocation) -> invocation.getArgument(0));
+      Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc");
 
         getMockMvc().perform(post("/seller/product/new")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -150,6 +139,7 @@ public class ProductControllerTest extends AbstractRestControllerTest{
         this.getMockMvc().perform(delete("/seller/product/{id}/delete", product.getProductId()))
                 .andExpect(status().isOk());
     }
+
 
 
 

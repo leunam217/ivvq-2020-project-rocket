@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
 
 public class LuhnAlgorithm {

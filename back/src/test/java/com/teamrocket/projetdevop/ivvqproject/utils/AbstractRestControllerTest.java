@@ -8,19 +8,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
+
+@SpringBootTest(properties = "databaseHeroku=false")
 @AutoConfigureMockMvc
 public abstract class AbstractRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+
     @BeforeEach
     public void setUp() {
+
         SecurityContextHolder.clearContext();
     }
 
     public MockMvc getMockMvc() {
         return mockMvc;
     }
+
 }

@@ -17,10 +17,10 @@ import java.io.Serializable;
 @Entity
 @Data
 @Table(name = "users")
-@NoArgsConstructor
 public class User implements Serializable {
 
     private static final long serialVersionUID = 4887904943282174032L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -59,7 +59,7 @@ public class User implements Serializable {
         this.address = address;
     }
 
-
+    public User(){}
     @Override
     public String toString() {
         return "User{" +

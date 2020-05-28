@@ -90,6 +90,7 @@ public class ShoppingCartController {
 
 
         User user = userService.findOne(principal.getName());
+
         if(!luhnAlgorithm.validateCreditCart(luhnAlgorithm.getCartNum()))
         {
             logger.info("the credit cart is not valid");
