@@ -1,15 +1,21 @@
-# Front
-FROM node:latest AS front
-WORKDIR /src
-COPY front/ivvq-project/ .
-RUN npm install && npm run build
-
-# Builder
-FROM maven:3-jdk-8 AS builder
+# Code gen
+FROM maven:3-jdk-8 AS codegen
 WORKDIR /app
 COPY back/pom.xml .
 RUN mvn dependency:go-offline -B
 COPY back/src src
+ARG appversion
+RUN mvn package -DskipTests && cp /app/target/ivvq-project-$appversion.jar ./myApp.jar
+
+# Front
+FROM node:latest AS front
+WORKDIR /src
+COPY front/ivvq-project/ .
+COPY --from=codegen /front/ivvq-project/src/api/endpoints.ts src/api/
+RUN npm install && npm run build
+
+# Builder
+FROM codegen AS builder
 COPY --from=front /src/dist/ /app/src/main/resources/public/
 ARG appversion
 RUN mvn package -DskipTests && cp /app/target/ivvq-project-$appversion.jar ./myApp.jar

@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Login from '@/views/Login.vue'
 import Product from '@/components/Product.vue'
 import Payment from '@/views/Payment.vue'
+import Register from '@/views/Register.vue'
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,11 @@ const routes: Array<RouteConfig> = [
     component: Payment
   },
   {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },
+  {
     path: '/about',
     name: 'About',
     // route level code-splitting
@@ -39,7 +45,6 @@ const routes: Array<RouteConfig> = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
   routes
 })
 
