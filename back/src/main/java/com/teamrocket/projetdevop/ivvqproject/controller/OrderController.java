@@ -4,6 +4,7 @@ package com.teamrocket.projetdevop.ivvqproject.controller;
 
 import com.teamrocket.projetdevop.ivvqproject.domain.Order;
 
+import com.teamrocket.projetdevop.ivvqproject.domain.ProductOrdered;
 import com.teamrocket.projetdevop.ivvqproject.service.OrderService;
 import com.teamrocket.projetdevop.ivvqproject.service.UserService;
 import com.teamrocket.projetdevop.ivvqproject.util.UserRoleEnum;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -65,7 +67,6 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        order.getProducts();
         return ResponseEntity.ok(order);
     }
 }
