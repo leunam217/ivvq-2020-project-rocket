@@ -15,7 +15,6 @@ import java.util.Objects;
 
 @Entity
 @Data
-@NoArgsConstructor
 public class ProductOrdered implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

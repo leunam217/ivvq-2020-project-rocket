@@ -4,6 +4,9 @@ const baseUrl = window.location.protocol + "//" + window.location.hostname + ":"
 
 export type Result<T, E> = Ok<T> | Err<E>
 
+// we need this because back-end role is stringly type todo update
+export type Role = "ROLE_CUSTOMER" | "ROLE_SELLER"
+
 export type Ok<T> = {
     type: "Ok";
     value: T;
