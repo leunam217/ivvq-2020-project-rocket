@@ -9,13 +9,14 @@ FROM maven:3-jdk-8 AS builder
 WORKDIR /app
 COPY back/pom.xml .
 RUN mvn dependency:go-offline -B
+RUN mvn spotbugs:check
+RUN mvn spotless:apply
+RUN mvn spotless:check
 COPY back/src src
 COPY --from=front /src/dist/ /app/src/main/resources/public/
 ARG appversion
 RUN mvn package -DskipTests && cp /app/target/ivvq-project-$appversion.jar ./myApp.jar
-RUN mvn spotbugs:check
-RUN mvn spotless:apply
-RUN mvn spotless:check
+
 
 
 # Runtime
