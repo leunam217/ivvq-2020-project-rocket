@@ -15,7 +15,8 @@ import java.util.Objects;
 
 @Entity
 @Data
-public class ProductOrdered {
+@NoArgsConstructor
+public class ProductOrdered implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

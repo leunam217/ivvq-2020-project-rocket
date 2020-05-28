@@ -90,18 +90,19 @@ public class ShoppingCartController {
 
 
         User user = userService.findOne(principal.getName());
-
+        String resultLog = "";
         if(!luhnAlgorithm.validateCreditCart(luhnAlgorithm.getCartNum()))
         {
-            logger.info("the credit cart is not valid");
+            resultLog = "the credit cart is not valid";
         }
         else
         {
-            logger.info("Valid credit cart");
+            resultLog = "Valid credit cart";
             shoppingCartService.placeOrder(user);
         }
+        logger.info(resultLog);
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(resultLog);
     }
 
 }
