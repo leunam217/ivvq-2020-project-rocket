@@ -7,6 +7,7 @@
 ### Lancement de l'application en local
 
 ```sh
+$ docker-compose build
 $ docker-compose up -d
 ```
 
