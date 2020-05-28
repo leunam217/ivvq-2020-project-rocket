@@ -40,7 +40,7 @@ export class Register extends VuexModule {
         const result = await loginf(user);
         switch (result.type) {
             case "Err": this.setSate({ ...this.getState, error: result.value }); break;
-            case "Ok": this.setSate({ ...this.getState )
+            case "Ok": this.setSate({ ...this.getState })
         }
     }
 
