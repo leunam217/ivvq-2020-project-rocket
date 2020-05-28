@@ -42,7 +42,7 @@ public class UserController {
     AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthentificationForm authentificationForm) {
+    public ResponseEntity<JwtResponse> login(@RequestBody AuthentificationForm authentificationForm) {
 
         try {
 
