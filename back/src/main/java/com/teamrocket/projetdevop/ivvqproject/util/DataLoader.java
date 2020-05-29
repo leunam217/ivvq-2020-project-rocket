@@ -5,6 +5,7 @@ import com.teamrocket.projetdevop.ivvqproject.domain.User;
 import com.teamrocket.projetdevop.ivvqproject.service.ProductService;
 import com.teamrocket.projetdevop.ivvqproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,46 +13,36 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Transactional
 public class DataLoader implements ApplicationRunner {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     private ProductService productService;
-    private UserService userService;
 
     private Product rocket1, rocket2, rocket3, rocket4, rocket5, rocket6;
 
-    private User rocketSeller;
+
+
     @Autowired
-    public DataLoader(ProductService productService, UserService userService) {
+    public DataLoader(ProductService productService) {
+
         this.productService = productService;
-        this.userService = userService;
+
     }
 
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
-        initSeller();
+    public void run(ApplicationArguments args){
+
         initProducteur();
 
+
     }
 
-    public void initRocketSeller()
-    {
-        //rocketSeller = new User("sameRocket@email.com",passwordEncoder.encode("secretShop"),"Sam","21345","Toulouse");
-        rocketSeller = new User();
-        rocketSeller.setEmail("sameRocket@email.com");
-        rocketSeller.setPassword("secret");
-        rocketSeller.setName("Sam");
-        rocketSeller.setPhone("123456");
-        rocketSeller.setAddress("USA");
-        rocketSeller.setRole("ROLE_SELLER");
-        userService.save(rocketSeller);
-    }
 
     public void initRocket1(){
         rocket1 = new Product("B01", "Rocket1990", new BigDecimal(10000000), 100,"Amazing Rocket1990",
@@ -96,11 +87,7 @@ public class DataLoader implements ApplicationRunner {
 
     }
 
-    public void initSeller()
-    {
-        initRocketSeller();
 
-    }
     public void initProducteur(){
         initRocket1();
         initRocket2();
@@ -110,4 +97,42 @@ public class DataLoader implements ApplicationRunner {
         initRocket6();
 
     }
+
+    public List<Product> getProducts() {
+        List<Product> products = new ArrayList<>();
+        products.add(rocket1);
+        products.add(rocket2);
+        products.add(rocket3);
+        products.add(rocket4);
+        products.add(rocket5);
+        products.add(rocket6);
+
+        return products;
+    }
+
+    public Product getRocket1() {
+        return rocket1;
+    }
+    public Product getRocket2() {
+        return rocket2;
+    }
+
+    public Product getRocket3() {
+        return rocket3;
+    }
+
+    public Product getRocket4() {
+        return rocket4;
+    }
+
+    public Product getRocket5() {
+        return rocket5;
+    }
+
+    public Product getRocket6() {
+        return rocket6;
+    }
+
+
+
 }

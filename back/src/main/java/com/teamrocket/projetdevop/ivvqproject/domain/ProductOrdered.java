@@ -95,7 +95,7 @@ public class ProductOrdered implements Serializable {
                 Objects.equals(productPrice, that.productPrice);
     }
 
-    public ProductOrdered(){}
+    //public ProductOrdered(){}
     @Override
     public int hashCode() {
 
