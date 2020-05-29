@@ -2,6 +2,7 @@ import { VuexModule, Module, Mutation, Action, getModule } from "vuex-module-dec
 import store from '@/store';
 import { User } from '@/api/endpoints';
 import { Result, Err } from '@/api/wrapper';
+import router from '@/router';
 
 export const moduleName = "Register";
 export type stateType = {
@@ -48,7 +49,7 @@ export class Register extends VuexModule {
         const result = await registerf(user);
         switch (result.type) {
             case "Err": this.setSate({ ...this.getState, error: result.value }); break;
-            case "Ok": this.setSate({ ...this.getState, registred: true })
+            case "Ok": this.setSate({ ...this.getState, registred: true }); router.push("Login");
         }
     }
 

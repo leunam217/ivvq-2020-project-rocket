@@ -33,7 +33,7 @@ export function Err<E>(value: E): Err<E> {
 
 
 export function moveError<T>(p: RestResponse<T>) {
-    return p.then(v => Ok(v.data)).catch(e => Err(e))
+    return p.then(v => Ok(v.data)).catch(e => Err(e));
 }
 
 
@@ -41,6 +41,10 @@ export class UserApi {
     private static client = new AxiosUserControllerClient(baseUrl)
 
     static register(user: User) {
-        return moveError(this.client.save(user))
+        return moveError(this.client.save(user));
+    }
+
+    static login(authForm: { username: string; password: string }) {
+        return moveError(this.client.login(authForm));
     }
 }

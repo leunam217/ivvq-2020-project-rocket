@@ -5,6 +5,7 @@ import Login from '@/views/Login.vue'
 import Product from '@/components/Product.vue'
 import Payment from '@/views/Payment.vue'
 import Register from '@/views/Register.vue'
+import { MainModule } from '@/components/mainStoreModule'
 
 Vue.use(VueRouter)
 
@@ -12,12 +13,23 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    beforeEnter(_to, _from, next) {
+      console.log(MainModule.getState)
+      if (MainModule.getState.jwtResponse?.token === undefined)
+        next({ name: 'Login' })
+      else next()
+    }
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    beforeEnter(_to, _from, next) {
+      if (MainModule.getState.jwtResponse?.token !== undefined)
+        next({ name: 'Home' })
+      else next()
+    }
   },
   {
     path: '/test',
