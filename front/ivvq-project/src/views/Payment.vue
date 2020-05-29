@@ -1,15 +1,5 @@
 <template>
-  <div class="d-flex flex-column justify-space-between fill-height">
-    <div>
-      <Toolbar> </Toolbar>
-    </div>
-    <v-spacer></v-spacer>
-
-    <PaymentForm class="align-self-center"> </PaymentForm>
-    <v-spacer></v-spacer>
-    <v-spacer></v-spacer>
-
-  </div>
+  <PaymentForm class="align-self-center"> </PaymentForm>
 </template>
 
 <script>

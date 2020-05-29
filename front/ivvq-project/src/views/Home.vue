@@ -1,45 +1,36 @@
 <template>
-  <div class="d-flex flex-column justify-space-between fill-height">
-    <Toolbar> </Toolbar>
-    <v-container class="align-self-center">
-      <v-row>
-        <v-col>
-          <router-link
-            to=/register>
-            <Product
-          >
-            </Product>
-          </router-link>
-        </v-col>
-        <v-col>
-          <Product></Product>
-        </v-col>
-        <v-col>
-          <Product></Product>
-        </v-col>
-        <v-col>
-          <Product></Product>
-        </v-col>
-        <v-col>
-          <Product></Product>
-        </v-col>
-        <v-col>
-          <Product></Product>
-        </v-col>
-        <v-col>
-          <Product></Product>
-        </v-col>
-        <v-col>
-          <Product></Product>
-        </v-col>
+  <v-row>
+    <v-col>
+      <router-link
+        to=/register>
+        <Product
+      >
+        </Product>
+      </router-link>
+    </v-col>
+    <v-col>
+      <Product></Product>
+    </v-col>
+    <v-col>
+      <Product></Product>
+    </v-col>
+    <v-col>
+      <Product></Product>
+    </v-col>
+    <v-col>
+      <Product></Product>
+    </v-col>
+    <v-col>
+      <Product></Product>
+    </v-col>
+    <v-col>
+      <Product></Product>
+    </v-col>
+    <v-col>
+      <Product></Product>
+    </v-col>
 
-      </v-row>
-    </v-container>
-
-    <v-spacer></v-spacer>
-    <v-spacer></v-spacer>
-
-  </div>
+  </v-row>
 </template>
 
 <script>

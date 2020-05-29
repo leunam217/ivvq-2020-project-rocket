@@ -1,21 +1,17 @@
 <template>
-  <div class="d-flex flex-column justify-space-between fill-height">
-    <div>
-      <Toolbar> </Toolbar>
-    </div>
-    <v-spacer></v-spacer>
-
-    <LoginForm class="align-self-center"> </LoginForm>
-    <v-spacer></v-spacer>
-    <v-spacer></v-spacer>
-
-  </div>
+  <LoginForm
+    class="align-self-center"
+    :loginf="loginf"
+  > </LoginForm>
 </template>
 
 <script>
 import Toolbar from "@/components/toolbar/Toolbar.vue";
 import LoginForm from "@/components/login/LoginForm.vue";
 import { Component, Vue } from "vue-property-decorator";
+import { MainModule } from "../components/mainStoreModule";
+import router from "../router";
+import { UserApi } from "../api/wrapper";
 
 @Component({
   components: {
@@ -23,5 +19,7 @@ import { Component, Vue } from "vue-property-decorator";
     LoginForm
   }
 })
-export default class Login extends Vue {}
+export default class Login extends Vue {
+  loginf = authForm => UserApi.login(authForm);
+}
 </script>

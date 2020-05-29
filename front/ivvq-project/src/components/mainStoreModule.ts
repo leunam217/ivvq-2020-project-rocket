@@ -1,13 +1,15 @@
 import { VuexModule, Module, Mutation, Action, getModule } from "vuex-module-decorators";
 import store from '@/store';
-import { User } from '@/api/endpoints';
+import { JwtResponse, AuthentificationForm } from '@/api/endpoints';
 import { Result, Err } from '@/api/wrapper';
+import router from '@/router';
 
 export const moduleName = "Main";
 export type stateType = {
-    user?: User,
-    shoppingCart: any[],
-    error?: any,
+    jwtResponse?: JwtResponse;
+    authForm: AuthentificationForm;
+    shoppingCart: any[];
+    error?: any;
 };
 
 @Module({
@@ -16,11 +18,12 @@ export type stateType = {
     name: moduleName,
     dynamic: true,
 })
-export class Register extends VuexModule {
+export class MainModule2 extends VuexModule {
     public mState: stateType = {
-        user: undefined,
+        jwtResponse: undefined,
         shoppingCart: [],
         error: undefined,
+        authForm: { password: "", username: "" }
     };
 
     @Mutation
@@ -36,11 +39,12 @@ export class Register extends VuexModule {
     }
 
     @Action({ rawError: true })
-    public async login({ user, loginf }: { user: User; loginf: (user: User) => Promise<Result<User, unknown>> }) {
-        const result = await loginf(user);
+    public async login({ authForm, loginf }:
+        { authForm: AuthentificationForm; loginf: (authForm: AuthentificationForm) => Promise<Result<JwtResponse, unknown>> }) {
+        const result = await loginf(authForm);
         switch (result.type) {
             case "Err": this.setSate({ ...this.getState, error: result.value }); break;
-            case "Ok": this.setSate({ ...this.getState })
+            case "Ok": this.setSate({ ...this.getState, jwtResponse: result.value }); router.push("/")
         }
     }
 
@@ -49,4 +53,4 @@ export class Register extends VuexModule {
         this.setSate({ ...this.getState, error: undefined });
     }
 }
-export const RegisterModule = getModule(Register)
+export const MainModule = getModule(MainModule2)
