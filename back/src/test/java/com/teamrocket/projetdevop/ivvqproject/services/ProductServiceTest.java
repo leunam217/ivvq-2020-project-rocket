@@ -56,14 +56,14 @@ public class ProductServiceTest {
     @BeforeEach()
     void setup()
     {
-        this.product = new Product("B001", "Rocket", new BigDecimal(123), 40,"desc");
+        this.product = new Product("B001", "Rocket", new BigDecimal(123), 40,"desc","icon");
 
     }
 
 
     @Test
     void should_return_saveProduct(){
-        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc");
+        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
 
         given(productRepository.findById(product.getProductId())).willReturn(Optional.empty());
         given(productRepository.save(product)).willAnswer(invocation -> invocation.getArgument(0));
@@ -81,7 +81,7 @@ public class ProductServiceTest {
     void should_return_findByProductId() {
     String id = "B001";
 
-        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 21,"desc");
+        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 21,"desc","icon");
 
         given(productRepository.findByProductId(id)).willReturn(product);
 
@@ -139,7 +139,7 @@ public class ProductServiceTest {
     @Test
     void should_return_updateProduct()
     {
-        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc");
+        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
 
         given(productRepository.save(product)).willReturn(product);
 

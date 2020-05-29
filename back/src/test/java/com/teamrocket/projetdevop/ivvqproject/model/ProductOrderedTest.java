@@ -28,7 +28,7 @@ public class ProductOrderedTest {
     void product_id_empty()
     {
         final ProductOrdered product = new ProductOrdered(
-                new Product("", "coucou", new BigDecimal(123), 100,"desc"),
+                new Product("", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 3);
         assertFalse(validator.validate(product).isEmpty());
     }
@@ -37,7 +37,7 @@ public class ProductOrderedTest {
     void product_name_empty()
     {
         final ProductOrdered product = new ProductOrdered(
-                new Product("B001", "", new BigDecimal(123), 100,"desc"),
+                new Product("B001", "", new BigDecimal(123), 100,"desc","icon"),
                 3);
 
         assertFalse(validator.validate(product).isEmpty());
@@ -47,7 +47,7 @@ public class ProductOrderedTest {
     void product_description_empty()
     {
         final ProductOrdered product = new ProductOrdered(
-                new Product("B001", "coucou", new BigDecimal(123), 100,""),
+                new Product("B001", "coucou", new BigDecimal(123), 100,"","icon"),
                 3);
 
         assertFalse(validator.validate(product).isEmpty());
@@ -57,7 +57,7 @@ public class ProductOrderedTest {
     void product_price_negatif()
     {
         final ProductOrdered product = new ProductOrdered(
-                new Product("B001", "coucou", new BigDecimal(123), -100,"desc"),
+                new Product("B001", "coucou", new BigDecimal(123), -100,"desc","icon"),
                 3);
 
         assertFalse(validator.validate(product).isEmpty());
@@ -67,7 +67,7 @@ public class ProductOrderedTest {
     void get_product_id()
     {
         final ProductOrdered product = new ProductOrdered(
-                new Product("B001", "coucou", new BigDecimal(123), 100,"desc"),
+                new Product("B001", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 3);
         assert(product.getProductId().equals("B001"));
     }
@@ -76,7 +76,7 @@ public class ProductOrderedTest {
     void get_product_name()
     {
         final ProductOrdered product = new ProductOrdered(
-                new Product("B001", "coucou", new BigDecimal(123), 100,"desc"),
+                new Product("B001", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 3);
         assert(product.getProductName().equals("coucou"));
     }
@@ -86,7 +86,7 @@ public class ProductOrderedTest {
     {
 
         final ProductOrdered product = new ProductOrdered(
-                new Product("B01", "coucou", new BigDecimal(123), 100,"desc"),
+                new Product("B01", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 3);
         assert(product.getProductPrice().equals(new BigDecimal(123)));
     }
@@ -95,7 +95,7 @@ public class ProductOrderedTest {
     void get_product_stock()
     {
         final ProductOrdered product = new ProductOrdered(
-                new Product("B01", "coucou", new BigDecimal(123), 100,"desc"),
+                new Product("B01", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 3);
         assert(product.getProductStock().equals(100));
     }
@@ -104,7 +104,7 @@ public class ProductOrderedTest {
     void get_product_description()
     {
         final ProductOrdered product = new ProductOrdered(
-                new Product("B01", "coucou", new BigDecimal(123), 100,"desc"),
+                new Product("B01", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 3);
         assert(product.getProductDescription().equals("desc"));
     }
@@ -113,10 +113,10 @@ public class ProductOrderedTest {
     void test_not_equals() {
         final ProductOrdered product = new ProductOrdered(
 
-                new Product("B01", "coucou", new BigDecimal(123), 100,"desc"),
+                new Product("B01", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 2);
         final ProductOrdered product1 = new ProductOrdered(
-                new Product("B01", "coucou", new BigDecimal(123), 100,"desc"),
+                new Product("B01", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 3);
 
         Assertions.assertNotSame(product, product1);
@@ -127,10 +127,10 @@ public class ProductOrderedTest {
     {
         final ProductOrdered product = new ProductOrdered(
 
-                new Product("B01", "coucou", new BigDecimal(123), 100,"desc"),
+                new Product("B01", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 2);
         final ProductOrdered product1 = new ProductOrdered(
-                new Product("B01", "coucou", new BigDecimal(123), 100,"desc"),
+                new Product("B01", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 3);
         Assertions.assertNotSame(product, product1);
 

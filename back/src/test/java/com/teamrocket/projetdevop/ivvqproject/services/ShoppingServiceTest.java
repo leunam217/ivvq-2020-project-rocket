@@ -68,7 +68,7 @@ public class ShoppingServiceTest {
         this.user = new User("bob@email.com",passwordEncoder.encode("secret"),"Bob","21345","Toulouse");
         this.shoppingCart = new ShoppingCart(user);
 
-        productOrdereds.add(new ProductOrdered(new Product("B01", "coucou", new BigDecimal(123), 100,"desc"),
+        productOrdereds.add(new ProductOrdered(new Product("B01", "coucou", new BigDecimal(123), 100,"desc","icon"),
                 2));
     }
 
