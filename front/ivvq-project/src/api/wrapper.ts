@@ -1,4 +1,5 @@
-import { AxiosUserControllerClient, User, RestResponse } from './endpoints'
+import { AxiosUserControllerClient, User, RestResponse, AxiosProductControllerClient } from './endpoints'
+import Axios from 'axios'
 
 const baseUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port
 
@@ -46,5 +47,16 @@ export class UserApi {
 
     static login(authForm: { username: string; password: string }) {
         return moveError(this.client.login(authForm));
+    }
+}
+
+function getAxiosWithAuthHeader(token: string) {
+    return Axios.create({ headers: { "Authorization": `Bearer ${token}` } })
+}
+
+export class ProductApi {
+    private static client = (token: string) => new AxiosProductControllerClient(baseUrl, getAxiosWithAuthHeader(token))
+    static getProducts(token: string) {
+        return moveError(this.client(token).findAllProduct());
     }
 }
