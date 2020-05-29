@@ -1,5 +1,5 @@
 package com.teamrocket.projetdevop.ivvqproject.services;
-/**
+
 
 
 import com.teamrocket.projetdevop.ivvqproject.domain.Product;
@@ -112,4 +112,3 @@ public class UserServiceIntntegrationTest {
     }
 
 }
-**/
