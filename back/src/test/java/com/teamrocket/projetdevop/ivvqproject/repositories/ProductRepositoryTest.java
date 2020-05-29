@@ -35,7 +35,7 @@ public class ProductRepositoryTest {
     @BeforeEach()
     void setup()
     {
-        this.product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc");
+        this.product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
 
     }
 

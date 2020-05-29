@@ -68,11 +68,11 @@ public class ProductControllerTest extends AbstractRestControllerTest{
     void setup() {
 
         productController = new ProductController();
-        this.product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc");
+        this.product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
         this.productList = new ArrayList<>();
         this.productList.add(product);
-        this.productList.add(new Product("B002", "Rocket1", new BigDecimal(123), 100,"desc"));
-        this.productList.add(new Product("B003", "Rocket2", new BigDecimal(123), 100,"desc"));
+        this.productList.add(new Product("B002", "Rocket1", new BigDecimal(123), 100,"desc","icon"));
+        this.productList.add(new Product("B003", "Rocket2", new BigDecimal(123), 100,"desc","icon"));
 
     }
 
@@ -91,7 +91,7 @@ public class ProductControllerTest extends AbstractRestControllerTest{
     void shouldFetchOneProductById() throws Exception {
 
         final String productId = "B001";
-        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc");
+        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
 
         given(productService.findOne(productId)).willReturn(product);
 
@@ -108,7 +108,7 @@ public class ProductControllerTest extends AbstractRestControllerTest{
     void add_product() throws Exception {
 
       given(productService.save(any(Product.class))).willAnswer((invocation) -> invocation.getArgument(0));
-      Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc");
+      Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc","icon");
 
         getMockMvc().perform(post("/seller/product/new")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -119,7 +119,7 @@ public class ProductControllerTest extends AbstractRestControllerTest{
     @Test
     void edit_product() throws Exception {
         String productId = "B01";
-        Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc");
+        Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc","icon");
         product.setProductStock(12);
         given(productService.update(product)).willAnswer((invocation) -> invocation.getArgument(0));
         getMockMvc().perform(put("/seller/product/{id}/edit", productId)
@@ -132,7 +132,7 @@ public class ProductControllerTest extends AbstractRestControllerTest{
     @Test
     void delete_product() throws Exception {
         String productId = "B001";
-        Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc");
+        Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc","icon");
         given(productService.findOne(productId)).willReturn(Optional.of(product).get());
         doNothing().when(productService).delete(product.getProductId());
 

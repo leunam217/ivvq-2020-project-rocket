@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,7 +36,7 @@ public class ProductServiceIntegrationTest {
     @BeforeEach
     void setup()
     {
-        this.product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc");
+        this.product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
     }
 
     @Test
@@ -104,6 +106,15 @@ public class ProductServiceIntegrationTest {
             assertNull(product);
         });
 
+    }
+
+    @Test
+    public void testFindAllProductFromDataLoaderCardinal() {
+        // given: un DataLoader initialisant la base à 6 produits
+        // when: la liste des produits est récupérée
+        List<Product> products = productService.findAll();
+        // then: il y a 6 activités dedans
+        assertEquals(6, products.size());
     }
 
 

@@ -110,7 +110,7 @@ public class CartControllerTest extends AbstractRestControllerTest {
     @Test
     void addItemToCart() throws Exception {
 
-        final Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc");
+        final Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc","icon");
 
         ItemForm itemForm = new ItemForm(2,"B01");
 

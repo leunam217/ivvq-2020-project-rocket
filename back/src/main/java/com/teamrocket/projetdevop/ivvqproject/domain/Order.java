@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -46,6 +47,7 @@ public class Order implements Serializable {
     @NotEmpty
     private String buyerAddress;
 
+    @Min(10)
     private BigDecimal orderAmount;
 
     private String orderStatus;
@@ -68,7 +70,19 @@ public class Order implements Serializable {
 
     }
 
+    public Order(Long id, String buyerEmail, String buyerName, String buyerPhone, String buyerAddress, BigDecimal orderAmount, String orderStatus)
+    {
+        this.orderId = id;
+        this.buyerEmail = buyerEmail;
+        this.buyerName = buyerName;
+        this.buyerPhone = buyerPhone;
+        this.buyerAddress = buyerAddress;
+        this.orderAmount = orderAmount;
+        this.orderAmount = orderAmount;
+        this.orderStatus = orderStatus;
 
+
+    }
     public Order(){}
     public String getOrderStatus() {
         return orderStatus;
@@ -116,12 +130,5 @@ public class Order implements Serializable {
         this.products = products;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
 
 }
