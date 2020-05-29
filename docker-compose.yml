@@ -15,6 +15,14 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: postgres
 
+  testing-env:
+    build:
+      context: .
+      dockerfile: Dockerfile.testing_env
+    container_name: testing-env
+    depends_on:
+      - postgresdb
+
   java-app:
     build:
       context: .
