@@ -3,32 +3,25 @@ package com.teamrocket.projetdevop.ivvqproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamrocket.projetdevop.ivvqproject.domain.*;
-import com.teamrocket.projetdevop.ivvqproject.repositories.OrderRepository;
 import com.teamrocket.projetdevop.ivvqproject.service.ProductOrderedService;
 import com.teamrocket.projetdevop.ivvqproject.service.ProductService;
 import com.teamrocket.projetdevop.ivvqproject.service.ShoppingCartService;
 import com.teamrocket.projetdevop.ivvqproject.service.UserService;
-import com.teamrocket.projetdevop.ivvqproject.service.impl.ShoppingShoppingCartServiceImpl;
 import com.teamrocket.projetdevop.ivvqproject.util.LuhnAlgorithm;
 import com.teamrocket.projetdevop.ivvqproject.utils.AbstractRestControllerTest;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,14 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc(addFilters = false)
 public class CartControllerTest extends AbstractRestControllerTest {
@@ -121,7 +110,7 @@ public class CartControllerTest extends AbstractRestControllerTest {
     @Test
     void addItemToCart() throws Exception {
 
-        final Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc");
+        final Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc","icon");
 
         ItemForm itemForm = new ItemForm(2,"B01");
 

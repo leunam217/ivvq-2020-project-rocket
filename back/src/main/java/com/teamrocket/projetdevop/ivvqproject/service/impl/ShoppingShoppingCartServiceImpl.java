@@ -1,14 +1,15 @@
 package com.teamrocket.projetdevop.ivvqproject.service.impl;
 
-
-import com.teamrocket.projetdevop.ivvqproject.domain.*;
+import com.teamrocket.projetdevop.ivvqproject.domain.Order;
+import com.teamrocket.projetdevop.ivvqproject.domain.ProductOrdered;
+import com.teamrocket.projetdevop.ivvqproject.domain.ShoppingCart;
+import com.teamrocket.projetdevop.ivvqproject.domain.User;
 import com.teamrocket.projetdevop.ivvqproject.repositories.OrderRepository;
-
 import com.teamrocket.projetdevop.ivvqproject.repositories.ProductInOrderRepository;
 import com.teamrocket.projetdevop.ivvqproject.repositories.ShoppingCartRepository;
 import com.teamrocket.projetdevop.ivvqproject.repositories.UserRepository;
-import com.teamrocket.projetdevop.ivvqproject.service.ShoppingCartService;
 import com.teamrocket.projetdevop.ivvqproject.service.ProductService;
+import com.teamrocket.projetdevop.ivvqproject.service.ShoppingCartService;
 import com.teamrocket.projetdevop.ivvqproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
-
 @Service
 public class ShoppingShoppingCartServiceImpl implements ShoppingCartService {
-
     @Autowired
     ProductService productService;
     @Autowired

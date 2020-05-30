@@ -99,7 +99,6 @@ public class UserServiceTest {
         final String email = "toto@email.com";
         final User user = new User("toto@email.com",passwordEncoder.encode("secret"),"Toto","21345","Mexique");
 
-
         given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
 
         final User expectedUser = userService.findOne(email);

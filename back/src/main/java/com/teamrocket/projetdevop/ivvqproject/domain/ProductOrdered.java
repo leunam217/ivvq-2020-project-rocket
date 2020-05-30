@@ -96,6 +96,7 @@ public class ProductOrdered implements Serializable {
     }
 
     public ProductOrdered(){}
+
     @Override
     public int hashCode() {
 

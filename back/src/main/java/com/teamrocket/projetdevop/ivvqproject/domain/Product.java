@@ -44,13 +44,14 @@ public class Product implements Serializable {
 
     private String productIcon;
 
-    public Product(String productId, String productName, BigDecimal productPrice, Integer productStock, String productDescription)
+    public Product(String productId, String productName, BigDecimal productPrice, Integer productStock, String productDescription, String productIcon)
     {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productStock = productStock;
         this.productDescription = productDescription;
+        this.productIcon = productIcon;
     }
     public Product() {
     }
