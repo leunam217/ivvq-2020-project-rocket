@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-public class ProductServiceIntegrationTest {
+public class ProductServiceIT {
 
     @Autowired
     private ProductService productService;

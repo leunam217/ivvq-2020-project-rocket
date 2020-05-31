@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-public class UserServiceIntntegrationTest {
+public class UserServiceIT {
 
     @Autowired
     private PasswordEncoder passwordEncoder;

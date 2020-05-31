@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-public class OrderServiceIntegrationTest {
+public class OrderServiceIT {
 
     @Autowired
     OrderService orderService;
@@ -47,7 +47,7 @@ public class OrderServiceIntegrationTest {
         assertNotNull(order.getOrderId());
     }
 
-    @Test
+   @Test
     public void testFetchedOrderIsNullAtTheBeginning() {
         // given: une order persisté produit
         orderRepository.save(order);
