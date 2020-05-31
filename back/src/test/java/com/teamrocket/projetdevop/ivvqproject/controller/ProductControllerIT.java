@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-public class ProductControllerIntegrationTest {
+public class ProductControllerIT {
 
     @Autowired
     private DataLoader dataLoader;
