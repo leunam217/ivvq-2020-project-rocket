@@ -6,7 +6,7 @@ services:
   - docker
 
 script:
-  - docker-compose build
+  - docker-compose up --exit-code-from testing-env testing-env && docker-compose build java-app
 
 deploy:
   provider: script
