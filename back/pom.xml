@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -175,7 +175,7 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-      
+
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
@@ -205,8 +205,8 @@
 						</configuration>
 					</execution>
 					<execution> <!-- cf. https://stackoverflow.com/questions/37318754/jacoco-report-for-maven-multimodule-project/37672302#37672302 -->
-						<id>after-unit-test-report</id>
-						<phase>test</phase>
+						<id>report</id>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
@@ -222,8 +222,7 @@
 							<goal>prepare-agent</goal>
 						</goals>
 						<configuration>
-							<destFile>${project.build
-							.directory}/coverage-reports/ti-jacoco.exec</destFile>
+							<destFile>${project.build.directory}/coverage-reports/ti-jacoco.exec</destFile>
 							<propertyName>jacoco.failsafe.argLine</propertyName>
 						</configuration>
 					</execution>
@@ -234,34 +233,53 @@
 							<goal>report</goal>
 						</goals>
 						<configuration>
-							<dataFile>${project.build
-							.directory}/coverage-reports/ti-jacoco.exec</dataFile>
-							<outputDirectory>${project.reporting
-							.outputDirectory}/ti-jacoco</outputDirectory>
+							<dataFile>${project.build.directory}/coverage-reports/ti-jacoco.exec</dataFile>
+							<outputDirectory>${project.reporting.outputDirectory}/ti-jacoco</outputDirectory>
 						</configuration>
 					</execution>
-					<!-- Set minimum coverage to 60% : found on https://www
+					<!-- Merge TU and TI jacoco exec file for check -->
+					<execution>
+						<id>merge-jacoco-exec-files</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>merge</goal>
+						</goals>
+						<configuration>
+							<fileSets>
+								<fileSet>
+									<directory>${project.build.directory}/coverage-reports</directory>
+									<includes>
+										<include>*.exec</include>
+									</includes>
+								</fileSet>
+							</fileSets>
+							<destFile>${project.build.directory}/coverage-reports/mergedjacoco.exec</destFile>
+						</configuration>
+					</execution>
+					<!-- Set line minimum coverage to 63% : found on https://www
 					.baeldung.com/jacoco -->
-					<!--execution>
+					<execution>
 						<id>coverage-check</id>
+						<phase>verify</phase>
 						<goals>
 							<goal>check</goal>
 						</goals>
 						<configuration>
+							<dataFile>${project.build.directory}/coverage-reports/mergedjacoco.exec</dataFile>
 							<rules>
 								<rule>
-									<element>PACKAGE</element>
+									<element>BUNDLE</element>
 									<limits>
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>60%</minimum>
+											<minimum>63%</minimum>
 										</limit>
 									</limits>
 								</rule>
 							</rules>
 						</configuration>
-					</execution-->
+					</execution>
 				</executions>
 			</plugin>
 			<plugin> <!-- for unit tests -->
@@ -292,32 +310,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.20.1</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.9</version>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>report</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
-
 
 </project>
