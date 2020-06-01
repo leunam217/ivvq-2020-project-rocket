@@ -282,7 +282,7 @@
 							<destFile>${project.build.directory}/coverage-reports/mergedjacoco.exec</destFile>
 						</configuration>
 					</execution>
-					<!-- Set line minimum coverage to 63% : found on https://www
+					<!-- Set line minimum coverage to 62% : found on https://www
 					.baeldung.com/jacoco -->
 					<execution>
 						<id>coverage-check</id>
@@ -299,7 +299,7 @@
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>63%</minimum>
+											<minimum>62%</minimum>
 										</limit>
 									</limits>
 								</rule>
