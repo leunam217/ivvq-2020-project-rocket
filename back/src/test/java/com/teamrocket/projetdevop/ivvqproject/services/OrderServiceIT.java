@@ -47,17 +47,6 @@ public class OrderServiceIT {
         assertNotNull(order.getOrderId());
     }
 
-   /*@Test
-    public void testFetchedOrderIsNullAtTheBeginning() {
-        // given: une order persisté produit
-        orderRepository.save(order);
-        // when: on appelle findOne avec l'id de cette order
-        Order fetched = orderRepository.findByOrderId(order.getOrderId());
-        // then: le résultat n'est pas null
-        assertNull(fetched);
-    }*/
-
-
     @Test
     public void testFindOrderWithUnexistingId() {
         // when:  findByOrderId est appelé avec un id ne correspondant à aucun objet en base
