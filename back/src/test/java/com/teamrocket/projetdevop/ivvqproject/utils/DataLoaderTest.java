@@ -13,32 +13,29 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
-
 @ExtendWith(MockitoExtension.class)
 public class DataLoaderTest {
 
-    private DataLoader dataLoader;
+	private DataLoader dataLoader;
 
-    @MockBean
-    private ProductService productService;
+	@MockBean
+	private ProductService productService;
 
-    @BeforeEach
-    public void setUp() {
-        dataLoader = new DataLoader(productService);
-    }
+	@BeforeEach
+	public void setUp() {
+		dataLoader = new DataLoader(productService);
+	}
 
-    @Test
-    public void testDataLoaderIsAnApplicationRunner(){
+	@Test
+	public void testDataLoaderIsAnApplicationRunner() {
 
-        assertThat(dataLoader).isNotNull();
-        // un DataLoader est un ApplicationRunner
-        assertTrue(dataLoader instanceof ApplicationRunner);
-    }
+		assertThat(dataLoader).isNotNull();
+		// un DataLoader est un ApplicationRunner
+		assertTrue(dataLoader instanceof ApplicationRunner);
+	}
 
 }

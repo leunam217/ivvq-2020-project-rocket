@@ -17,45 +17,45 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
 @Component
 public class JsonWebTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JsonWebTokenProvider jsonWebTokenProvider;
+	@Autowired
+	private JsonWebTokenProvider jsonWebTokenProvider;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        String jwt = getToken(httpServletRequest);
-        if (jwt != null && jsonWebTokenProvider.validate(jwt)) {
-            try {
-                String userAccount = jsonWebTokenProvider.getUserAccount(jwt);
-                User user = userService.findOne(userAccount);
+	@Override
+	protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+			FilterChain filterChain) throws ServletException, IOException {
+		String jwt = getToken(httpServletRequest);
+		if (jwt != null && jsonWebTokenProvider.validate(jwt)) {
+			try {
+				String userAccount = jsonWebTokenProvider.getUserAccount(jwt);
+				User user = userService.findOne(userAccount);
 
-                SimpleGrantedAuthority sga = new SimpleGrantedAuthority(user.getRole());
-                ArrayList<SimpleGrantedAuthority> list = new ArrayList<>();
-                list.add(sga);
-                UsernamePasswordAuthenticationToken auth
-                        = new UsernamePasswordAuthenticationToken(user.getEmail(), null, list);
-                SecurityContextHolder.getContext().setAuthentication(auth);
+				SimpleGrantedAuthority sga = new SimpleGrantedAuthority(user.getRole());
+				ArrayList<SimpleGrantedAuthority> list = new ArrayList<>();
+				list.add(sga);
+				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user.getEmail(),
+						null, list);
+				SecurityContextHolder.getContext().setAuthentication(auth);
 
-            } catch (Exception e) {
-                logger.error("Set Authentication from JWT failed");
-            }
-        }
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
-    }
+			} catch (Exception e) {
+				logger.error("Set Authentication from JWT failed");
+			}
+		}
+		filterChain.doFilter(httpServletRequest, httpServletResponse);
+	}
 
-    private String getToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
+	private String getToken(HttpServletRequest request) {
+		String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.replace("Bearer ", "");
-        }
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			return authHeader.replace("Bearer ", "");
+		}
 
-        return null;
-    }
+		return null;
+	}
 }

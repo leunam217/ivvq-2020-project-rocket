@@ -9,13 +9,11 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 @SpringBootApplication
 public class IvvqProjectApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(IvvqProjectApplication.class, args);
 	}
-
 
 }

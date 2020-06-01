@@ -5,12 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    Order findByOrderId(Long orderId);
+	Order findByOrderId(Long orderId);
 
-    List<Order> findAllByBuyerEmailOrderByOrderStatusAscCreateTimeDesc(String buyerEmail);
+	List<Order> findAllByBuyerEmailOrderByOrderStatusAscCreateTimeDesc(String buyerEmail);
 
-    List<Order> findAllByOrderByOrderStatusAscCreateTimeDesc();
+	List<Order> findAllByOrderByOrderStatusAscCreateTimeDesc();
 
 }

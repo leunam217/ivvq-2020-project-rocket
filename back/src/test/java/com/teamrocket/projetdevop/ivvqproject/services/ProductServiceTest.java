@@ -11,17 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-
 
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
-
 
 import java.math.BigDecimal;
 
@@ -36,132 +31,121 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-
-
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class ProductServiceTest {
 
-    @Mock
-    ProductRepository productRepository;
+	@Mock
+	ProductRepository productRepository;
 
-    @InjectMocks
-    ProductServiceImpl productServiceImpl;
+	@InjectMocks
+	ProductServiceImpl productServiceImpl;
 
-    @Mock
-    ProductService productService;
+	@Mock
+	ProductService productService;
 
-    private Product product;
+	private Product product;
 
-    @BeforeEach()
-    void setup()
-    {
-        this.product = new Product("B001", "Rocket", new BigDecimal(123), 40,"desc","icon");
+	@BeforeEach()
+	void setup() {
+		this.product = new Product("B001", "Rocket", new BigDecimal(123), 40, "desc", "icon");
 
-    }
+	}
 
+	@Test
+	void should_return_saveProduct() {
+		final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100, "desc", "icon");
 
-    @Test
-    void should_return_saveProduct(){
-        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
+		given(productRepository.findById(product.getProductId())).willReturn(Optional.empty());
+		given(productRepository.save(product)).willAnswer(invocation -> invocation.getArgument(0));
 
-        given(productRepository.findById(product.getProductId())).willReturn(Optional.empty());
-        given(productRepository.save(product)).willAnswer(invocation -> invocation.getArgument(0));
+		Product saveProduct = productServiceImpl.save(product);
 
-        Product saveProduct = productServiceImpl.save(product);
+		assertThat(saveProduct).isNotNull();
 
-        assertThat(saveProduct).isNotNull();
+		verify(productRepository).save(any(Product.class));
 
-        verify(productRepository).save(any(Product.class));
+	}
 
-    }
+	@Test
+	void should_return_findByProductId() {
+		String id = "B001";
 
+		final Product product = new Product("B001", "Rocket", new BigDecimal(123), 21, "desc", "icon");
 
-    @Test
-    void should_return_findByProductId() {
-    String id = "B001";
+		given(productRepository.findByProductId(id)).willReturn(product);
 
-        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 21,"desc","icon");
+		final Product expectedProduct = productServiceImpl.findOne(id);
 
-        given(productRepository.findByProductId(id)).willReturn(product);
+		assertThat(expectedProduct).isNotNull();
 
-        final Product expectedProduct = productServiceImpl.findOne(id);
+	}
 
-        assertThat(expectedProduct).isNotNull();
+	@Test
+	void should_return_findAllProduct() {
+		List<Product> products = new ArrayList<>();
+		given(productRepository.findAll()).willReturn(products);
 
-    }
+		List<Product> expectedProducts = productServiceImpl.findAll();
+		Assertions.assertEquals(expectedProducts, products);
+	}
 
-    @Test
-    void should_return_findAllProduct() {
-        List<Product> products = new ArrayList<>();
-        given(productRepository.findAll()).willReturn(products);
+	@Test
+	void findAllByName() {
+		List<Product> products = new ArrayList<>();
+		given(productRepository.findAllByProductNameContaining(product.getProductName())).willReturn(products);
+		List<Product> expectedProducts = productServiceImpl.findAllByName(product.getProductName());
+		Assertions.assertEquals(expectedProducts, products);
+	}
 
-        List<Product> expectedProducts = productServiceImpl.findAll();
-        Assertions.assertEquals(expectedProducts,products);
-    }
+	@Test
+	void should_return_increaseStock() {
 
-    @Test
-    void findAllByName() {
-        List<Product> products = new ArrayList<>();
-        given(productRepository.findAllByProductNameContaining(product.getProductName())).willReturn(products);
-        List<Product> expectedProducts = productServiceImpl.findAllByName(product.getProductName());
-        Assertions.assertEquals(expectedProducts,products);
-    }
+		given(productService.findOne(product.getProductId())).willReturn(product);
 
+		Integer oldStock = product.getProductStock();
+		productService.increaseStock(product.getProductId(), 50);
+		Integer addedStock = product.getProductStock() + 50;
 
-    @Test
-    void should_return_increaseStock()
-    {
+		Assertions.assertEquals(50, addedStock - oldStock);
 
-        given(productService.findOne(product.getProductId())).willReturn(product);
+	}
 
-        Integer oldStock = product.getProductStock();
-        productService.increaseStock(product.getProductId(), 50);
-       Integer addedStock = product.getProductStock() + 50;
+	@Test
+	void should_return_decreaseStock() {
 
-        Assertions.assertEquals(50, addedStock - oldStock);
+		given(productService.findOne(product.getProductId())).willReturn(product);
 
-    }
+		Integer oldStock = product.getProductStock();
 
-    @Test
-    void should_return_decreaseStock() {
+		productService.decreaseStock(product.getProductId(), 50);
+		Integer decreaseStock = product.getProductStock() - 50;
+		Assertions.assertEquals(50, oldStock - decreaseStock);
 
-        given(productService.findOne(product.getProductId())).willReturn(product);
+	}
 
-        Integer oldStock = product.getProductStock();
+	@Test
+	void should_return_updateProduct() {
+		final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100, "desc", "icon");
 
-        productService.decreaseStock(product.getProductId(), 50);
-        Integer decreaseStock = product.getProductStock() - 50;
-        Assertions.assertEquals(50, oldStock - decreaseStock);
+		given(productRepository.save(product)).willReturn(product);
 
-    }
+		final Product expectedProduct = productServiceImpl.update(product);
 
-    @Test
-    void should_return_updateProduct()
-    {
-        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
+		assertThat(expectedProduct).isNotNull();
 
-        given(productRepository.save(product)).willReturn(product);
+		verify(productRepository).save(any(Product.class));
+	}
 
-        final Product expectedProduct = productServiceImpl.update(product);
+	@Test
+	void should_delete_product() {
 
-        assertThat(expectedProduct).isNotNull();
+		// String productId = "B001";
 
-        verify(productRepository).save(any(Product.class));
-    }
+		given(productService.findOne(product.getProductId())).willReturn(product);
+		productService.delete(product.getProductId());
 
-
-    @Test
-    void should_delete_product()
-    {
-
-        //String productId = "B001";
-
-        given(productService.findOne(product.getProductId())).willReturn(product);
-        productService.delete(product.getProductId());
-
-        verify(productService).delete(product.getProductId());
-    }
+		verify(productService).delete(product.getProductId());
+	}
 
 }
-

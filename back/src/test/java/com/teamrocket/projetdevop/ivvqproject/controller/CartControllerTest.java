@@ -1,6 +1,5 @@
 package com.teamrocket.projetdevop.ivvqproject.controller;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamrocket.projetdevop.ivvqproject.domain.*;
 import com.teamrocket.projetdevop.ivvqproject.service.ProductOrderedService;
@@ -32,157 +31,143 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.hamcrest.CoreMatchers.is;
 
-
 import static org.hamcrest.Matchers.not;
 
 @AutoConfigureMockMvc(addFilters = false)
 public class CartControllerTest extends AbstractRestControllerTest {
 
-        @MockBean
-        ShoppingCartService shoppingCartService;
+	@MockBean
+	ShoppingCartService shoppingCartService;
 
-        @MockBean
-        UserService userService;
+	@MockBean
+	UserService userService;
 
-        @MockBean
-        ProductService productService;
+	@MockBean
+	ProductService productService;
 
-        @Mock
-        PasswordEncoder passwordEncoder;
+	@Mock
+	PasswordEncoder passwordEncoder;
 
-        @Autowired
-        private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-        @MockBean
-        ProductOrderedService productOrderedService;
+	@MockBean
+	ProductOrderedService productOrderedService;
 
-        LuhnAlgorithm luhnAlgorithm;
+	LuhnAlgorithm luhnAlgorithm;
 
+	@Mock
+	Principal principal;
 
-        @Mock
-        Principal principal;
+	private List<ShoppingCart> carts;
 
+	Collection<ProductOrdered> productOrdereds = new HashSet<>();
 
-        private List<ShoppingCart> carts;
+	private User user;
+	private ShoppingCart shoppingCart;
 
-        Collection<ProductOrdered> productOrdereds = new HashSet<>();
+	@BeforeEach
+	void setup() {
+		this.user = new User("bobemail.com", passwordEncoder.encode("secret"), "Bob", "21345", "Toulouse");
+		this.shoppingCart = new ShoppingCart(user);
+		this.carts = new ArrayList<>();
+		this.carts.add(new ShoppingCart(user));
 
-            private User user;
-            private ShoppingCart shoppingCart;
+		this.productOrdereds.add(new ProductOrdered());
 
-        @BeforeEach
-        void setup() {
-         this.user = new User("bobemail.com",passwordEncoder.encode("secret"),"Bob","21345","Toulouse");
-         this.shoppingCart = new ShoppingCart(user);
-        this.carts = new ArrayList<>();
-        this.carts.add(new ShoppingCart(user));
+		this.luhnAlgorithm = new LuhnAlgorithm();
 
-        this.productOrdereds.add(new ProductOrdered());
+	}
 
-        this.luhnAlgorithm = new LuhnAlgorithm();
+	@Test
+	void getCart() throws Exception {
+		given(userService.findOne(user.getName())).willReturn(user);
+		getMockMvc().perform(get("/cart").principal(principal)).andExpect(status().isOk());
+	}
 
-    }
+	@Test
+	void edit() throws Exception {
 
-    @Test
-    void getCart() throws Exception {
-        given(userService.findOne(user.getName())).willReturn(user);
-        getMockMvc().perform(get("/cart")
-                .principal(principal))
-                .andExpect(status().isOk());
-    }
+		String itemId = "B01";
+		given(userService.findOne(user.getName())).willReturn(user);
 
-    @Test
-    void edit()  throws Exception
-    {
+		productOrderedService.update("B01", 3, user);
 
-        String itemId = "B01";
-        given(userService.findOne(user.getName())).willReturn(user);
+		getMockMvc().perform(put("/cart/{itemId}", 3, itemId).contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(3)).principal(principal)).andExpect(status().isOk());
+	}
 
-        productOrderedService.update("B01",3,user);
+	@Test
+	void addItemToCart() throws Exception {
 
-        getMockMvc().perform(put("/cart/{itemId}",3,itemId)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(3))
-                .principal(principal))
-                .andExpect(status().isOk());
-    }
+		final Product product = new Product("B01", "Rocket", new BigDecimal(123), 100, "desc", "icon");
 
-    @Test
-    void addItemToCart() throws Exception {
+		ItemForm itemForm = new ItemForm(2, "B01");
 
-        final Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc","icon");
+		given(productService.findOne(itemForm.getProductId())).willReturn(product);
 
-        ItemForm itemForm = new ItemForm(2,"B01");
+		given(userService.findOne(user.getName())).willReturn(user);
 
-        given(productService.findOne(itemForm.getProductId())).willReturn(product);
+		getMockMvc()
+				.perform(post("/cart/add").contentType(MediaType.APPLICATION_JSON_UTF8)
+						.content(objectMapper.writeValueAsString(itemForm)).principal(principal))
+				.andExpect(status().isOk());
+	}
 
-        given(userService.findOne(user.getName())).willReturn(user);
+	@Test
+	void modifyItem() throws Exception {
 
-        getMockMvc().perform(post("/cart/add")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(itemForm))
-                .principal(principal))
-                .andExpect(status().isOk());
-    }
+		ItemForm itemForm = new ItemForm(3, "B01");
+		given(userService.findOne(user.getName())).willReturn(user);
 
-    @Test
-    void modifyItem() throws Exception
-    {
+		getMockMvc()
+				.perform(put("/cart/{itemId}", itemForm.getProductId(), itemForm.getQuantity(), principal)
+						.contentType(MediaType.APPLICATION_JSON_UTF8)
+						.content(objectMapper.writeValueAsString(itemForm.getQuantity())).principal(principal))
+				.andExpect(status().isOk());
 
-        ItemForm itemForm = new ItemForm(3,"B01");
-        given(userService.findOne(user.getName())).willReturn(user);
+	}
 
-        getMockMvc().perform(put("/cart/{itemId}", itemForm.getProductId(), itemForm.getQuantity(), principal)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(itemForm.getQuantity()))
-                .principal(principal))
-                .andExpect(status().isOk());
+	@Test
+	void deleteItem() throws Exception {
 
-    }
+		ItemForm itemForm = new ItemForm(3, "B01");
+		given(userService.findOne(user.getName())).willReturn(user);
 
-    @Test
-    void deleteItem() throws Exception {
+		doNothing().when(shoppingCartService).delete(itemForm.getProductId(), user);
 
-        ItemForm itemForm = new ItemForm(3,"B01");
-        given(userService.findOne(user.getName())).willReturn(user);
+		this.getMockMvc().perform(delete("/cart/{itemId}", itemForm.getProductId(), principal).principal(principal))
+				.andExpect(status().isOk());
+	}
 
-        doNothing().when(shoppingCartService).delete(itemForm.getProductId(), user);
+	@Test
+	void checkoutCartNotValideCart() throws Exception {
 
-        this.getMockMvc().perform(delete("/cart/{itemId}", itemForm.getProductId(),principal)
-                .principal(principal))
-                .andExpect(status().isOk());
-    }
+		String cartNum = "546779514710751";
+		luhnAlgorithm.setCartNum(cartNum);
+		given(userService.findOne(user.getName())).willReturn(user);
 
-    @Test
-    void checkoutCartNotValideCart() throws Exception {
+		luhnAlgorithm.validateCreditCart(cartNum);
+		this.getMockMvc()
+				.perform(post("/cart/checkout", luhnAlgorithm, principal).contentType(MediaType.APPLICATION_JSON_UTF8)
+						.content(objectMapper.writeValueAsString(luhnAlgorithm)).principal(principal))
+				.andExpect(status().isOk());
 
-        String cartNum = "546779514710751";
-        luhnAlgorithm.setCartNum(cartNum);
-        given(userService.findOne(user.getName())).willReturn(user);
+	}
+	@Test
+	void checkoutValideCart() throws Exception {
 
-        luhnAlgorithm.validateCreditCart(cartNum);
-        this.getMockMvc().perform(post("/cart/checkout", luhnAlgorithm, principal)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(luhnAlgorithm))
-                .principal(principal))
-                .andExpect(status().isOk());
+		String cartNum = "5467795147107510";
+		luhnAlgorithm.setCartNum(cartNum);
+		given(userService.findOne(user.getName())).willReturn(user);
 
-    }
-    @Test
-    void checkoutValideCart() throws Exception {
+		luhnAlgorithm.validateCreditCart(cartNum);
+		shoppingCartService.placeOrder(user);
+		this.getMockMvc()
+				.perform(post("/cart/checkout", luhnAlgorithm, principal).contentType(MediaType.APPLICATION_JSON_UTF8)
+						.content(objectMapper.writeValueAsString(luhnAlgorithm)).principal(principal))
+				.andExpect(status().isOk());
 
-        String cartNum = "5467795147107510";
-        luhnAlgorithm.setCartNum(cartNum);
-        given(userService.findOne(user.getName())).willReturn(user);
-
-        luhnAlgorithm.validateCreditCart(cartNum);
-        shoppingCartService.placeOrder(user);
-        this.getMockMvc().perform(post("/cart/checkout", luhnAlgorithm, principal)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(luhnAlgorithm))
-                .principal(principal))
-                .andExpect(status().isOk());
-
-    }
+	}
 
 }

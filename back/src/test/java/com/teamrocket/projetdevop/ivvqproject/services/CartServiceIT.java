@@ -1,6 +1,5 @@
 package com.teamrocket.projetdevop.ivvqproject.services;
 
-
 import com.teamrocket.projetdevop.ivvqproject.domain.Product;
 import com.teamrocket.projetdevop.ivvqproject.domain.ProductOrdered;
 import com.teamrocket.projetdevop.ivvqproject.domain.ShoppingCart;
@@ -43,40 +42,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-public class CartServiceIntegrationTest {
+public class CartServiceIT {
 
-    @Autowired
-    ProductService productService;
-    @Autowired
-    OrderRepository orderRepository;
-    @Autowired
-    UserRepository userRepository;
+	@Autowired
+	ProductService productService;
+	@Autowired
+	OrderRepository orderRepository;
+	@Autowired
+	UserRepository userRepository;
 
-    @Autowired
-    ProductInOrderRepository productInOrderRepository;
-    @Autowired
-    ShoppingCartRepository cartRepository;
-    @Autowired
-    UserService userService;
-    @Autowired
-    PasswordEncoder passwordEncoder;;
+	@Autowired
+	ProductInOrderRepository productInOrderRepository;
+	@Autowired
+	ShoppingCartRepository cartRepository;
+	@Autowired
+	UserService userService;
+	@Autowired
+	PasswordEncoder passwordEncoder;;
 
+	@Autowired
+	DataLoader dataLoader;
 
-   @Autowired
-    DataLoader dataLoader;
+	@Test
+	public void testGetCart() {
 
-    @Test
-    public void testGetCart()  {
+		User user = new User("bob@email.com", passwordEncoder.encode("secret"), "Bob", "21345", "Toulouse");
+		userService.save(user);
 
-        User user = new User("bob@email.com",passwordEncoder.encode("secret"),"Bob","21345","Toulouse");
-        userService.save(user);
+		ShoppingCart cart = new ShoppingCart(user);
+		assertThat(cart).isNotNull();
 
-        ShoppingCart cart = new ShoppingCart(user);
-        assertThat(cart).isNotNull();
-
-    }
-
-
-
+	}
 
 }

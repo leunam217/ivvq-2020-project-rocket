@@ -53,73 +53,62 @@ import static org.hamcrest.CoreMatchers.is;
 
 import static junit.framework.TestCase.assertEquals;
 
-
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class UserAuthentificationControllerTest extends AbstractRestControllerTest {
 
-    @MockBean
-    private UserService userService;
+	@MockBean
+	private UserService userService;
 
-    @MockBean
-    ShoppingCartService shoppingCartService;
+	@MockBean
+	ShoppingCartService shoppingCartService;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+	@Mock
+	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	ObjectMapper objectMapper;
 
-    @Autowired
-    ObjectMapper objectMapper;
+	@BeforeEach
+	public void setUp() {
+		SecurityContextHolder.clearContext();
 
+	}
 
+	@Test
+	public void unsuccessful_authentication_with_wrong_password() throws Exception {
+		getMockMvc()
+				.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\": \"user\", \"password\": \"wrong\"}"))
+				.andExpect(status().isUnauthorized()).andExpect(content().string(not(containsString("token"))));
+	}
 
-    @BeforeEach
-    public void setUp() {
-        SecurityContextHolder.clearContext();
+	@Test
+	public void unsuccessful_authentication_with_not_existing_user() throws Exception {
+		getMockMvc()
+				.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\": \"user\", \"password\": \"not_existing\"}"))
+				.andExpect(status().isUnauthorized()).andExpect(content().string(not(containsString("token"))));
+	}
 
-    }
+	@Test
+	public void unsuccessful_authentication_with_disabled() throws Exception {
+		getMockMvc()
+				.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\": \"disabled\", \"password\": \"password\"}"))
+				.andExpect(status().isUnauthorized()).andExpect(content().string(not(containsString("token"))));
+	}
 
+	@Test
+	@WithMockUser(username = "bobemail.com", password = "secret")
+	void saveUser() throws Exception {
+		given(userService.save(any(User.class))).willAnswer((invocation) -> invocation.getArgument(0));
 
-    @Test
-    public void unsuccessful_authentication_with_wrong_password() throws Exception {
-        getMockMvc().perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\": \"user\", \"password\": \"wrong\"}"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(content().string(not(containsString("token"))));
-    }
-
-    @Test
-    public void unsuccessful_authentication_with_not_existing_user() throws Exception {
-        getMockMvc().perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\": \"user\", \"password\": \"not_existing\"}"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(content().string(not(containsString("token"))));
-    }
-
-    @Test
-    public void unsuccessful_authentication_with_disabled() throws Exception {
-        getMockMvc().perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\": \"disabled\", \"password\": \"password\"}"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(content().string(not(containsString("token"))));
-    }
-
-
-    @Test
-    @WithMockUser(username = "bobemail.com", password = "secret")
-    void saveUser() throws Exception {
-        given(userService.save(any(User.class))).willAnswer((invocation) -> invocation.getArgument(0));
-
-        final User user = new User("bobemail.com",passwordEncoder.encode("secret"),"Bob","21345","Toulouse");
-        getMockMvc().perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(user)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-
+		final User user = new User("bobemail.com", passwordEncoder.encode("secret"), "Bob", "21345", "Toulouse");
+		getMockMvc()
+				.perform(post("/register").contentType(MediaType.APPLICATION_JSON_UTF8)
+						.content(objectMapper.writeValueAsString(user)))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
 
 }
