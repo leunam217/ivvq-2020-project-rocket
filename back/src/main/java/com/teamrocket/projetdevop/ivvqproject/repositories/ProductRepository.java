@@ -6,12 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface ProductRepository extends JpaRepository<Product, String> {
 
-    Product findByProductId(String id);
+	Product findByProductId(String id);
 
-    List<Product> findAllByProductNameContaining(String productName);
+	List<Product> findAllByProductNameContaining(String productName);
 
-    List<Product> findAllByOrderByProductId();
+	List<Product> findAllByOrderByProductId();
 }

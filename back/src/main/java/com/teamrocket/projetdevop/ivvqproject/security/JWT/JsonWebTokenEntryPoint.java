@@ -11,21 +11,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
 @Component
 public class JsonWebTokenEntryPoint implements AuthenticationEntryPoint {
 
+	private static final Logger logger = LoggerFactory.getLogger(JsonWebTokenEntryPoint.class);
 
-    private static final Logger logger = LoggerFactory.getLogger(JsonWebTokenEntryPoint.class);
+	// called if authentication failed
+	@Override
+	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
+			throws IOException {
 
-    // called if authentication failed
-    @Override
-    public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException e)
-            throws IOException {
-
-        logger.error("Unauthorized error. Message - {}", e.getMessage());
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-    }
+		logger.error("Unauthorized error. Message - {}", e.getMessage());
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+	}
 }

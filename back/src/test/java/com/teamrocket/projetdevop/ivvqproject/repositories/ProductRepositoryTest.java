@@ -1,6 +1,5 @@
 package com.teamrocket.projetdevop.ivvqproject.repositories;
 
-
 import com.teamrocket.projetdevop.ivvqproject.domain.Product;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,34 +21,31 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
-
 @ExtendWith(MockitoExtension.class)
 public class ProductRepositoryTest {
 
+	@Mock
+	ProductRepository repository;
 
-    @Mock
-    ProductRepository repository;
+	private Product product;
 
-    private Product product;
+	@BeforeEach()
+	void setup() {
+		this.product = new Product("B001", "Rocket", new BigDecimal(123), 100, "desc", "icon");
 
-    @BeforeEach()
-    void setup()
-    {
-        this.product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
+	}
 
-    }
+	@Test
+	public void findByIdIfPresent() {
 
-    @Test
-    public void findByIdIfPresent(){
+		Optional<Product> productOptional = repository.findById(product.getProductId());
+		assertThat(productOptional.isPresent()).isNotNull();
+	}
 
-        Optional<Product> productOptional = repository.findById(product.getProductId());
-        assertThat(productOptional.isPresent()).isNotNull();
-    }
-
-    @Test
-    public void findAllByProductNameContaining(){
-        List<Product> productOptional = repository.findAllByProductNameContaining(product.getProductName());
-        assertTrue(productOptional.isEmpty());
-    }
+	@Test
+	public void findAllByProductNameContaining() {
+		List<Product> productOptional = repository.findAllByProductNameContaining(product.getProductName());
+		assertTrue(productOptional.isEmpty());
+	}
 
 }
