@@ -21,72 +21,72 @@ import java.util.Set;
 
 @Service
 public class ShoppingShoppingCartServiceImpl implements ShoppingCartService {
-    @Autowired
-    ProductService productService;
-    @Autowired
-    OrderRepository orderRepository;
-    @Autowired
-    UserRepository userRepository;
+	@Autowired
+	ProductService productService;
+	@Autowired
+	OrderRepository orderRepository;
+	@Autowired
+	UserRepository userRepository;
 
-    @Autowired
-    ProductInOrderRepository productInOrderRepository;
-    @Autowired
-    ShoppingCartRepository cartRepository;
-    @Autowired
-    UserService userService;
+	@Autowired
+	ProductInOrderRepository productInOrderRepository;
+	@Autowired
+	ShoppingCartRepository cartRepository;
+	@Autowired
+	UserService userService;
 
-    @Override
-    public ShoppingCart getCart(User user) {
-        return user.getCart();
-    }
+	@Override
+	public ShoppingCart getCart(User user) {
+		return user.getCart();
+	}
 
-    @Override
-    @Transactional
-    public void finalCart(Collection<ProductOrdered> productInOrders, User user) {
-        ShoppingCart finalCart = user.getCart();
-        productInOrders.forEach(productInOrder -> {
-            Set<ProductOrdered> set = finalCart.getProducts();
-            Optional<ProductOrdered> old = set.stream().filter(e -> e.getProductId().equals(productInOrder.getProductId())).findFirst();
-            ProductOrdered prod;
-            if (old.isPresent()) {
-                prod = old.get();
-                prod.setCount(productInOrder.getCount() + prod.getCount());
-            } else {
-                prod = productInOrder;
-                prod.setCart(finalCart);
-                finalCart.getProducts().add(prod);
-            }
-            productInOrderRepository.save(prod);
-        });
-        cartRepository.save(finalCart);
+	@Override
+	@Transactional
+	public void finalCart(Collection<ProductOrdered> productInOrders, User user) {
+		ShoppingCart finalCart = user.getCart();
+		productInOrders.forEach(productInOrder -> {
+			Set<ProductOrdered> set = finalCart.getProducts();
+			Optional<ProductOrdered> old = set.stream()
+					.filter(e -> e.getProductId().equals(productInOrder.getProductId())).findFirst();
+			ProductOrdered prod;
+			if (old.isPresent()) {
+				prod = old.get();
+				prod.setCount(productInOrder.getCount() + prod.getCount());
+			} else {
+				prod = productInOrder;
+				prod.setCart(finalCart);
+				finalCart.getProducts().add(prod);
+			}
+			productInOrderRepository.save(prod);
+		});
+		cartRepository.save(finalCart);
 
-    }
+	}
 
-    @Override
-    @Transactional
-    public void delete(String itemId, User user) {
-        Optional<ProductOrdered> op = user.getCart().getProducts().stream().filter(e -> itemId.equals(e.getProductId())).findFirst();
-        op.ifPresent(productInOrder -> {
-            productInOrder.setCart(null);
-            productInOrderRepository.deleteById(productInOrder.getId());
-        });
-    }
+	@Override
+	@Transactional
+	public void delete(String itemId, User user) {
+		Optional<ProductOrdered> op = user.getCart().getProducts().stream().filter(e -> itemId.equals(e.getProductId()))
+				.findFirst();
+		op.ifPresent(productInOrder -> {
+			productInOrder.setCart(null);
+			productInOrderRepository.deleteById(productInOrder.getId());
+		});
+	}
 
+	@Override
+	@Transactional
+	public void placeOrder(User user) {
+		Order order = new Order(user);
+		orderRepository.save(order);
 
+		user.getCart().getProducts().forEach(productInOrder -> {
+			productInOrder.setCart(null);
+			productInOrder.setOrder(order);
+			productService.decreaseStock(productInOrder.getProductId(), productInOrder.getCount());
+			productInOrderRepository.save(productInOrder);
+			cartRepository.deleteAll();
+		});
 
-    @Override
-    @Transactional
-    public void placeOrder(User user) {
-        Order order = new Order(user);
-        orderRepository.save(order);
-
-        user.getCart().getProducts().forEach(productInOrder -> {
-            productInOrder.setCart(null);
-            productInOrder.setOrder(order);
-            productService.decreaseStock(productInOrder.getProductId(), productInOrder.getCount());
-            productInOrderRepository.save(productInOrder);
-            cartRepository.deleteAll();
-        });
-
-    }
+	}
 }

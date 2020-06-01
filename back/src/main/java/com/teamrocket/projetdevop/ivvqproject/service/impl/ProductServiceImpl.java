@@ -1,6 +1,5 @@
 package com.teamrocket.projetdevop.ivvqproject.service.impl;
 
-
 import com.teamrocket.projetdevop.ivvqproject.domain.Product;
 import com.teamrocket.projetdevop.ivvqproject.repositories.ProductRepository;
 import com.teamrocket.projetdevop.ivvqproject.service.ProductService;
@@ -11,78 +10,75 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
-
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    ProductRepository productInfoRepository;
+	@Autowired
+	ProductRepository productInfoRepository;
 
-    @Override
-    public Product findOne(String productId) {
+	@Override
+	public Product findOne(String productId) {
 
-        Product product = productInfoRepository.findByProductId(productId);
-        return product;
-    }
+		Product product = productInfoRepository.findByProductId(productId);
+		return product;
+	}
 
+	@Override
+	public List<Product> findAll() {
+		return productInfoRepository.findAllByOrderByProductId();
+	}
 
+	@Override
+	public List<Product> findAllByName(String name) {
+		return productInfoRepository.findAllByProductNameContaining(name);
+	}
 
-    @Override
-    public List<Product> findAll() {
-        return productInfoRepository.findAllByOrderByProductId();
-    }
+	@Override
+	@Transactional
+	public void increaseStock(String productId, int amount) {
+		Product productInfo = findOne(productId);
+		if (productInfo == null)
+			throw new IllegalArgumentException("PRODUCT_NOT_EXIST");
 
-    @Override
-    public List<Product> findAllByName(String name) {
-        return productInfoRepository.findAllByProductNameContaining(name);
-    }
+		int update = productInfo.getProductStock() + amount;
+		productInfo.setProductStock(update);
+		productInfoRepository.save(productInfo);
+	}
 
-    @Override
-    @Transactional
-    public void increaseStock(String productId, int amount) {
-        Product productInfo = findOne(productId);
-        if (productInfo == null) throw new IllegalArgumentException("PRODUCT_NOT_EXIST");
+	@Override
+	@Transactional
+	public void decreaseStock(String productId, int amount) {
+		Product productInfo = findOne(productId);
+		if (productInfo == null)
+			throw new IllegalArgumentException("PRODUCT_NOT_EXIST");
 
-        int update = productInfo.getProductStock() + amount;
-        productInfo.setProductStock(update);
-        productInfoRepository.save(productInfo);
-    }
+		int update = productInfo.getProductStock() - amount;
+		if (update <= 0)
+			throw new IllegalArgumentException("PRODUCT_NOT_ENOUGH");
 
-    @Override
-    @Transactional
-    public void decreaseStock(String productId, int amount) {
-        Product productInfo = findOne(productId);
-        if (productInfo == null) throw new IllegalArgumentException("PRODUCT_NOT_EXIST");
+		productInfo.setProductStock(update);
+		productInfoRepository.save(productInfo);
+	}
 
-        int update = productInfo.getProductStock() - amount;
-        if(update <= 0) throw new IllegalArgumentException("PRODUCT_NOT_ENOUGH");
+	@Override
+	public Product update(Product product) {
 
-        productInfo.setProductStock(update);
-        productInfoRepository.save(productInfo);
-    }
+		productInfoRepository.findByProductId(product.getProductId());
+		return productInfoRepository.save(product);
+	}
 
+	@Override
+	public Product save(Product product) {
+		return update(product);
+	}
 
+	@Override
+	public void delete(String productId) {
+		Product productInfo = findOne(productId);
+		if (productInfo == null)
+			throw new IllegalArgumentException("PRODUCT_NOT_EXIST");
+		productInfoRepository.delete(productInfo);
 
-
-    @Override
-    public Product update(Product product) {
-
-        productInfoRepository.findByProductId(product.getProductId());
-        return productInfoRepository.save(product);
-    }
-
-    @Override
-    public Product save(Product product) {
-        return update(product);
-    }
-
-    @Override
-    public void delete(String productId) {
-        Product productInfo = findOne(productId);
-        if (productInfo == null) throw new IllegalArgumentException("PRODUCT_NOT_EXIST");
-        productInfoRepository.delete(productInfo);
-
-    }
+	}
 
 }

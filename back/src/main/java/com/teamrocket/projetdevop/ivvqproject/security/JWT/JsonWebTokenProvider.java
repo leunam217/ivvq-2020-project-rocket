@@ -11,40 +11,34 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-
-
 @Component
 public class JsonWebTokenProvider {
 
-    private static final Logger logger = LoggerFactory.getLogger(JsonWebTokenProvider.class);
-    @Value("${jwtSecret}")
-    private String jwtSecret;
-    @Value("${jwtExpiration}")
-    private int jwtExpiration;
+	private static final Logger logger = LoggerFactory.getLogger(JsonWebTokenProvider.class);
+	@Value("${jwtSecret}")
+	private String jwtSecret;
+	@Value("${jwtExpiration}")
+	private int jwtExpiration;
 
-    public String generate(Authentication authentication) {
+	public String generate(Authentication authentication) {
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + jwtExpiration * 1000))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
-    }
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		return Jwts.builder().setSubject(userDetails.getUsername()).setIssuedAt(new Date())
+				.setExpiration(new Date(new Date().getTime() + jwtExpiration * 1000))
+				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+	}
 
-    public boolean validate(String token) {
-        try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            logger.error("JWT Authentication Failed");
-        }
-        return false;
-    }
+	public boolean validate(String token) {
+		try {
+			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+			return true;
+		} catch (Exception e) {
+			logger.error("JWT Authentication Failed");
+		}
+		return false;
+	}
 
-    public String getUserAccount(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token)
-                .getBody().getSubject();
-    }
+	public String getUserAccount(String token) {
+		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+	}
 }

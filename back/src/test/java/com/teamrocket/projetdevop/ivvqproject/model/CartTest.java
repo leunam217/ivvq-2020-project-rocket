@@ -27,49 +27,41 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @ExtendWith(MockitoExtension.class)
 public class CartTest {
 
-    private static Validator validator;
+	private static Validator validator;
 
-    @Mock
-    PasswordEncoder passwordEncoder;
+	@Mock
+	PasswordEncoder passwordEncoder;
 
+	@BeforeAll
+	public static void setupContext() {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		validator = factory.getValidator();
+	}
 
+	@Test
+	void get_user() {
+		final User user = new User("bob@email.com", passwordEncoder.encode(""), "Bob", "21345", "Toulouse");
+		final ShoppingCart cart = new ShoppingCart(user);
+		assert (cart.getUser().equals(user));
+	}
 
+	@Test
+	void set_user() {
+		final User user = new User("bob@email.com", passwordEncoder.encode(""), "Bob", "21345", "Toulouse");
+		final ShoppingCart cart = new ShoppingCart(user);
 
-    @BeforeAll
-    public static void setupContext() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+		User user1 = new User("bob1@email.com", passwordEncoder.encode(""), "Bob", "21345", "Toulouse");
+		cart.setUser(new User("bob1@email.com", passwordEncoder.encode(""), "Bob", "21345", "Toulouse"));
 
-    @Test
-    void get_user()
-    {
-        final User user = new User("bob@email.com",passwordEncoder.encode(""),"Bob","21345","Toulouse");
-        final ShoppingCart cart = new ShoppingCart(user);
-        assert(cart.getUser().equals(user));
-    }
+		assert (cart.getUser().equals(user1));
+	}
 
-    @Test
-    void set_user()
-    {
-        final User user = new User("bob@email.com",passwordEncoder.encode(""),"Bob","21345","Toulouse");
-        final ShoppingCart cart = new ShoppingCart(user);
-
-        User user1 = new User("bob1@email.com",passwordEncoder.encode(""),"Bob","21345","Toulouse");
-        cart.setUser(new User("bob1@email.com",passwordEncoder.encode(""),"Bob","21345","Toulouse"));
-
-        assert(cart.getUser().equals(user1));
-    }
-
-
-    @Test
-    void get_products()
-    {
-        Set<ProductOrdered> productList = new HashSet<>();
-        final ShoppingCart cart = new ShoppingCart();
-        cart.setProducts(productList);
-        assert(cart.getProducts().equals(productList));
-    }
-
+	@Test
+	void get_products() {
+		Set<ProductOrdered> productList = new HashSet<>();
+		final ShoppingCart cart = new ShoppingCart();
+		cart.setProducts(productList);
+		assert (cart.getProducts().equals(productList));
+	}
 
 }

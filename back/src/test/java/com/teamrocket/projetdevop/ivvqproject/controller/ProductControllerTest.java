@@ -1,6 +1,5 @@
 package com.teamrocket.projetdevop.ivvqproject.controller;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.teamrocket.projetdevop.ivvqproject.domain.Product;
@@ -23,7 +22,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
-
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,109 +36,94 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 
-
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class ProductControllerTest extends AbstractRestControllerTest{
+public class ProductControllerTest extends AbstractRestControllerTest {
 
-    @MockBean
-    ProductServiceImpl productService;
+	@MockBean
+	ProductServiceImpl productService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
+	private List<Product> productList;
 
-    private List<Product> productList;
+	private ProductController productController;
 
-    private ProductController productController;
+	@MockBean
+	private Product product;
 
-    @MockBean
-    private Product product;
+	@BeforeEach
+	void setup() {
 
-    @BeforeEach
-    void setup() {
+		productController = new ProductController();
+		this.product = new Product("B001", "Rocket", new BigDecimal(123), 100, "desc", "icon");
+		this.productList = new ArrayList<>();
+		this.productList.add(product);
+		this.productList.add(new Product("B002", "Rocket1", new BigDecimal(123), 100, "desc", "icon"));
+		this.productList.add(new Product("B003", "Rocket2", new BigDecimal(123), 100, "desc", "icon"));
 
-        productController = new ProductController();
-        this.product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
-        this.productList = new ArrayList<>();
-        this.productList.add(product);
-        this.productList.add(new Product("B002", "Rocket1", new BigDecimal(123), 100,"desc","icon"));
-        this.productList.add(new Product("B003", "Rocket2", new BigDecimal(123), 100,"desc","icon"));
+	}
 
-    }
+	@Test
+	void should_fetch_all_products() throws Exception {
 
-    @Test
-    void should_fetch_all_products() throws Exception {
+		given(productService.findAll()).willReturn(productList);
 
-        given(productService.findAll()).willReturn(productList);
+		getMockMvc().perform(get("/product")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.size()", is(productList.size())));
+	}
 
-        getMockMvc().perform(get("/product"))
-                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.size()",is(productList.size())));
-    }
+	@Test
+	void shouldFetchOneProductById() throws Exception {
 
+		final String productId = "B001";
+		final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100, "desc", "icon");
 
-    @Test
-    void shouldFetchOneProductById() throws Exception {
+		given(productService.findOne(productId)).willReturn(product);
 
-        final String productId = "B001";
-        final Product product = new Product("B001", "Rocket", new BigDecimal(123), 100,"desc","icon");
+		getMockMvc().perform(get("/product/{productId}", productId)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.productId", is(product.getProductId())))
+				.andExpect(jsonPath("$.productName", is(product.getProductName())))
+				.andExpect(jsonPath("$.productStock", is(product.getProductStock())))
+				.andExpect(jsonPath("$.productDescription", is(product.getProductDescription())));
+	}
 
-        given(productService.findOne(productId)).willReturn(product);
+	@Test
+	void add_product() throws Exception {
 
-        getMockMvc().perform(get("/product/{productId}", productId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productId", is(product.getProductId())))
-                .andExpect(jsonPath("$.productName", is(product.getProductName())))
-                .andExpect(jsonPath("$.productStock", is(product.getProductStock())))
-                .andExpect(jsonPath("$.productDescription", is(product.getProductDescription())));
-    }
+		given(productService.save(any(Product.class))).willAnswer((invocation) -> invocation.getArgument(0));
+		Product product = new Product("B01", "Rocket", new BigDecimal(123), 100, "desc", "icon");
 
+		getMockMvc().perform(post("/seller/product/new").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(product))).andExpect(status().isOk());
+	}
 
-    @Test
-    void add_product() throws Exception {
+	@Test
+	void edit_product() throws Exception {
+		String productId = "B01";
+		Product product = new Product("B01", "Rocket", new BigDecimal(123), 100, "desc", "icon");
+		product.setProductStock(12);
+		given(productService.update(product)).willAnswer((invocation) -> invocation.getArgument(0));
+		getMockMvc().perform(put("/seller/product/{id}/edit", productId).contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(product))).andExpect(status().isOk());
+	}
 
-      given(productService.save(any(Product.class))).willAnswer((invocation) -> invocation.getArgument(0));
-      Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc","icon");
+	@Test
+	void delete_product() throws Exception {
+		String productId = "B001";
+		Product product = new Product("B01", "Rocket", new BigDecimal(123), 100, "desc", "icon");
+		given(productService.findOne(productId)).willReturn(Optional.of(product).get());
+		doNothing().when(productService).delete(product.getProductId());
 
-        getMockMvc().perform(post("/seller/product/new")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(product)))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void edit_product() throws Exception {
-        String productId = "B01";
-        Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc","icon");
-        product.setProductStock(12);
-        given(productService.update(product)).willAnswer((invocation) -> invocation.getArgument(0));
-        getMockMvc().perform(put("/seller/product/{id}/edit", productId)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(product)))
-                .andExpect(status().isOk());
-    }
-
-
-    @Test
-    void delete_product() throws Exception {
-        String productId = "B001";
-        Product product = new Product("B01", "Rocket", new BigDecimal(123), 100,"desc","icon");
-        given(productService.findOne(productId)).willReturn(Optional.of(product).get());
-        doNothing().when(productService).delete(product.getProductId());
-
-        this.getMockMvc().perform(delete("/seller/product/{id}/delete", product.getProductId()))
-                .andExpect(status().isOk());
-    }
-
-
-
+		this.getMockMvc().perform(delete("/seller/product/{id}/delete", product.getProductId()))
+				.andExpect(status().isOk());
+	}
 
 }

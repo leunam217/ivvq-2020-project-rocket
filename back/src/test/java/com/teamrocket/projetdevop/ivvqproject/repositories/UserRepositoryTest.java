@@ -1,6 +1,5 @@
 package com.teamrocket.projetdevop.ivvqproject.repositories;
 
-
 import com.teamrocket.projetdevop.ivvqproject.domain.User;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,36 +25,35 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class UserRepositoryTest {
 
-    @Mock
-    UserRepository userRepository;
+	@Mock
+	UserRepository userRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+	@Mock
+	private PasswordEncoder passwordEncoder;
 
-    private User user;
+	private User user;
 
-    @BeforeEach
-    void setup()
-    {
-        this.user = new User("bob@email.com",passwordEncoder.encode(""),"Bob","21345","Toulouse");
-    }
+	@BeforeEach
+	void setup() {
+		this.user = new User("bob@email.com", passwordEncoder.encode(""), "Bob", "21345", "Toulouse");
+	}
 
-    @Test
-    public void find_by_email(){
-        Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
-        assertThat(userOptional).isNotNull();
-    }
+	@Test
+	public void find_by_email() {
+		Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
+		assertThat(userOptional).isNotNull();
+	}
 
-    @Test
-    public void findByEmail_NotPresent() {
-        Optional<User> userOptional = userRepository.findById("toto@email.com");
-        assertFalse(userOptional.isPresent());
-    }
+	@Test
+	public void findByEmail_NotPresent() {
+		Optional<User> userOptional = userRepository.findById("toto@email.com");
+		assertFalse(userOptional.isPresent());
+	}
 
-    @Test
-    public void findByRoleNotPresent() {
-        Collection<User> customerOptional = userRepository.findAllByRole("ROLE_CUSTOMER");
-        assertTrue(customerOptional.isEmpty());
-    }
+	@Test
+	public void findByRoleNotPresent() {
+		Collection<User> customerOptional = userRepository.findAllByRole("ROLE_CUSTOMER");
+		assertTrue(customerOptional.isEmpty());
+	}
 
 }

@@ -14,24 +14,25 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Configuration
-@ConditionalOnProperty( name = "databaseHeroku")
+@ConditionalOnProperty(name = "databaseHeroku")
 public class DatabaseConfig {
 
-    @Bean
-    public DataSource dataSource() throws URISyntaxException {
-        URI dbUri = new URI(System.getenv("DATABASE_URL"));
+	@Bean
+	public DataSource dataSource() throws URISyntaxException {
+		URI dbUri = new URI(System.getenv("DATABASE_URL"));
 
-     String username = dbUri.getUserInfo().split(":")[0];
-     String password = dbUri.getUserInfo().split(":")[1];
-     String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?createDatabaseIfNotExist=true";
+		String username = dbUri.getUserInfo().split(":")[0];
+		String password = dbUri.getUserInfo().split(":")[1];
+		String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath()
+				+ "?createDatabaseIfNotExist=true";
 
-     DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-     dataSource.setDriverClassName("org.postgresql.Driver");
-     dataSource.setUsername(username);
-     dataSource.setPassword(password);
-     dataSource.setUrl(dbUrl);
+		dataSource.setDriverClassName("org.postgresql.Driver");
+		dataSource.setUsername(username);
+		dataSource.setPassword(password);
+		dataSource.setUrl(dbUrl);
 
-     return dataSource;
-    }
+		return dataSource;
+	}
 }

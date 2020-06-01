@@ -1,6 +1,5 @@
 package com.teamrocket.projetdevop.ivvqproject.services;
 
-
 import com.teamrocket.projetdevop.ivvqproject.domain.Order;
 
 import com.teamrocket.projetdevop.ivvqproject.repositories.OrderRepository;
@@ -24,114 +23,97 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 import static org.mockito.BDDMockito.given;
-
-
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class OrderServiceTest {
 
-    private static Validator validator;
-        @Mock
-        OrderRepository orderRepository;
+	private static Validator validator;
+	@Mock
+	OrderRepository orderRepository;
 
-        @InjectMocks
-        OrderServiceImpl orderServiceImpl;
+	@InjectMocks
+	OrderServiceImpl orderServiceImpl;
 
+	@BeforeAll
+	public static void setupContext() {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		validator = factory.getValidator();
+	}
 
-        @BeforeAll
-        public static void setupContext() {
-            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-            validator = factory.getValidator();
-        }
+	@Test
+	void should_return_findAll() {
+		List<Order> orders = new ArrayList<>();
 
+		given(orderRepository.findAll()).willReturn(orders);
 
-        @Test
-        void should_return_findAll()
-        {
-            List<Order> orders = new ArrayList<>();
+		List<Order> expectedProducts = orderServiceImpl.findAll();
+		Assertions.assertEquals(expectedProducts, orders);
 
-            given(orderRepository.findAll()).willReturn(orders);
+	}
 
-            List<Order> expectedProducts = orderServiceImpl.findAll();
-            Assertions.assertEquals(expectedProducts,orders);
+	@Test
+	void should_return_findOne() {
+		Long id = 1L;
 
-        }
+		final Order order = new Order();
 
-        @Test
-        void should_return_findOne()
-        {
-            Long id = 1L;
+		given(orderRepository.findByOrderId(id)).willReturn(order);
 
-            final Order order = new Order();
+		final Order expectedOrder = orderServiceImpl.findOne(id);
+		assertThat(expectedOrder).isNotNull();
 
-            given(orderRepository.findByOrderId(id)).willReturn(order);
+	}
 
-            final Order expectedOrder = orderServiceImpl.findOne(id);
-            assertThat(expectedOrder).isNotNull();
+	@Test
+	void order_null() {
+		Long orderId = null;
+		given(orderRepository.findByOrderId(orderId)).willReturn(null);
 
-        }
+		Throwable exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			orderServiceImpl.findOne(orderId);
+		});
+		// Assertions.assertEquals("ORDER_NOT_FOUND", exception.getMessage());
+	}
 
-        @Test
-        void order_null()
-        {
-            Long orderId = null;
-            given(orderRepository.findByOrderId(orderId)).willReturn(null);
+	@Test
+	void should_return_findByEmail() {
+		String email = "toto@email.com";
 
-            Throwable exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-               orderServiceImpl.findOne(orderId);
-            });
-           // Assertions.assertEquals("ORDER_NOT_FOUND", exception.getMessage());
-        }
+		final List<Order> order = new ArrayList<>();
 
+		given(orderRepository.findAllByBuyerEmailOrderByOrderStatusAscCreateTimeDesc(email)).willReturn(order);
 
-        @Test
-        void should_return_findByEmail()
-        {
-            String email = "toto@email.com";
+		final List<Order> expectedOrder = orderServiceImpl.findByBuyerEmail(email);
 
-            final List<Order> order = new ArrayList<>();
+		assertThat(expectedOrder).isNotNull();
 
-            given(orderRepository.findAllByBuyerEmailOrderByOrderStatusAscCreateTimeDesc(email)).willReturn(order);
+	}
 
-            final List<Order> expectedOrder = orderServiceImpl.findByBuyerEmail(email);
+	@Test
 
-            assertThat(expectedOrder).isNotNull();
+	void should_return_finish() {
+		Long id = 1L;
 
+		final Order order = new Order();
 
-        }
+		given(orderRepository.findByOrderId(id)).willReturn(order);
+		final Order expectedOrder = orderServiceImpl.finish(id);
+		Assertions.assertEquals(expectedOrder.getOrderStatus(), order.getOrderStatus());
 
-        @Test
+	}
 
-        void should_return_finish()
-        {
-            Long id = 1L;
+	@Test
+	void should_return_cancel() {
+		Long id = 1L;
+		final Order order = new Order();
 
-            final Order order = new Order();
+		given(orderRepository.findByOrderId(id)).willReturn(order);
 
-            given(orderRepository.findByOrderId(id)).willReturn(order);
-            final Order expectedOrder = orderServiceImpl.finish(id);
-            Assertions.assertEquals(expectedOrder.getOrderStatus(), order.getOrderStatus());
+		final Order expectedOrder = orderServiceImpl.cancel(id);
+		Assertions.assertEquals(expectedOrder.getOrderStatus(), order.getOrderStatus());
 
-
-        }
-
-        @Test
-        void should_return_cancel()
-        {
-            Long id = 1L;
-            final Order order = new Order();
-
-            given(orderRepository.findByOrderId(id)).willReturn(order);
-
-            final Order expectedOrder = orderServiceImpl.cancel(id);
-            Assertions.assertEquals(expectedOrder.getOrderStatus(), order.getOrderStatus());
-
-
-        }
-
-
+	}
 
 }

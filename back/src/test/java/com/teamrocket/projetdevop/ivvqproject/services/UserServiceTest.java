@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,84 +26,78 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
-    @Mock
-    UserRepository userRepository;
+	@Mock
+	UserRepository userRepository;
 
-    @InjectMocks
-    UserServiceImpl userService;
+	@InjectMocks
+	UserServiceImpl userService;
 
-    @Mock
-    ShoppingCartRepository shoppingCartRepository;
+	@Mock
+	ShoppingCartRepository shoppingCartRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+	@Mock
+	private PasswordEncoder passwordEncoder;
 
-    @Test
-    void should_save_user_successfully(){
+	@Test
+	void should_save_user_successfully() {
 
+		final User user = new User("bob@email.com", passwordEncoder.encode("secret"), "Bob", "21345", "Toulouse");
 
-        final User user = new User("bob@email.com",passwordEncoder.encode("secret"),"Bob","21345","Toulouse");
+		userRepository.findByEmail(user.getEmail());
 
-        userRepository.findByEmail(user.getEmail());
+		given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
+		given(userRepository.save(user)).willAnswer(invocation -> invocation.getArgument(0));
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
-        given(userRepository.save(user)).willAnswer(invocation -> invocation.getArgument(0));
+		User savedUser = userService.save(user);
+		ShoppingCart cart = shoppingCartRepository.save(new ShoppingCart(savedUser));
 
-        User savedUser = userService.save(user);
-        ShoppingCart cart = shoppingCartRepository.save(new ShoppingCart(savedUser));
+		savedUser.setCart(cart);
+		assertThat(savedUser).isNotNull();
 
-        savedUser.setCart(cart);
-        assertThat(savedUser).isNotNull();
+		verify(userRepository, atLeast(1)).save(any(User.class));
 
-        verify(userRepository,atLeast(1)).save(any(User.class));
+	}
 
-    }
+	@Test
+	void should_throw_error_when_save_user_exist() {
+		final User user = new User("bob@email.com", passwordEncoder.encode("secret"), "Bob", "21345", "Toulouse");
 
+		given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
-    @Test
-    void should_throw_error_when_save_user_exist()
-    {
-        final User user = new User("bob@email.com",passwordEncoder.encode("secret"),"Bob","21345","Toulouse");
+		assertThrows(IllegalArgumentException.class, () -> {
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+			userService.save(user);
+		});
 
-        assertThrows(IllegalArgumentException.class, () -> {
+		verify(userRepository, never()).save(any(User.class));
+	}
 
-            userService.save(user);
-        });
+	@Test
+	void update() {
+		final User user = new User("bob@email.com", passwordEncoder.encode("password"), "Bob", "21345", "Toulouse");
 
-        verify(userRepository, never()).save(any(User.class));
-    }
+		given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
-    @Test
-    void update()
-    {
-        final User user = new User("bob@email.com",passwordEncoder.encode("password"),"Bob","21345","Toulouse");
+		given(userRepository.save(user)).willReturn(user);
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+		final User expectedUser = userService.update(user);
 
-        given(userRepository.save(user)).willReturn(user);
+		assertThat(expectedUser).isNotNull();
 
-        final User expectedUser = userService.update(user);
+		verify(userRepository).save(any(User.class));
+	}
 
-        assertThat(expectedUser).isNotNull();
+	@Test
 
-        verify(userRepository).save(any(User.class));
-    }
+	void findOne() {
+		final String email = "toto@email.com";
+		final User user = new User("toto@email.com", passwordEncoder.encode("secret"), "Toto", "21345", "Mexique");
 
+		given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
 
-    @Test
+		final User expectedUser = userService.findOne(email);
 
-    void findOne() {
-        final String email = "toto@email.com";
-        final User user = new User("toto@email.com",passwordEncoder.encode("secret"),"Toto","21345","Mexique");
+		assertThat(expectedUser).isNotNull();
 
-        given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
-
-        final User expectedUser = userService.findOne(email);
-
-        assertThat(expectedUser).isNotNull();
-
-    }
+	}
 }
-

@@ -23,35 +23,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Transactional
 public class OrderServiceIT {
 
-    @Autowired
-    OrderService orderService;
-    @Autowired
-    OrderRepository orderRepository;
+	@Autowired
+	OrderService orderService;
+	@Autowired
+	OrderRepository orderRepository;
 
-    private Order order;
+	private Order order;
 
-    @BeforeEach
-    void setup()
-    {
-        this.order = new Order(1L, "bob@email.com", "bob","1234","toulouse",
-                new BigDecimal(10),"confirmé");
-    }
+	@BeforeEach
+	void setup() {
+		this.order = new Order(1L, "bob@email.com", "bob", "1234", "toulouse", new BigDecimal(10), "confirmé");
+	}
 
-    @Test
-    public void testSavedOrderHasId(){
+	@Test
+	public void testSavedOrderHasId() {
 
-        // given: une commande non persisté product
-        // when: une commande est persisté
-        orderRepository.save(order);
-        // then: order a un id
-        assertNotNull(order.getOrderId());
-    }
+		// given: une commande non persisté product
+		// when: une commande est persisté
+		orderRepository.save(order);
+		// then: order a un id
+		assertNotNull(order.getOrderId());
+	}
 
-    @Test
-    public void testFindOrderWithUnexistingId() {
-        // when:  findByOrderId est appelé avec un id ne correspondant à aucun objet en base
-        // then: null est retourné
-        assertNull(orderRepository.findByOrderId(100L));
-    }
+	@Test
+	public void testFindOrderWithUnexistingId() {
+		// when: findByOrderId est appelé avec un id ne correspondant à aucun objet en
+		// base
+		// then: null est retourné
+		assertNull(orderRepository.findByOrderId(100L));
+	}
 
 }
