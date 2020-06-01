@@ -4,6 +4,5 @@ WORKDIR /app
 COPY back/pom.xml .
 RUN mvn dependency:go-offline -B
 COPY back/src src
-RUN mvn spotbugs:check && mvn spotless:apply && mvn spotless:check
 ENTRYPOINT ["mvn", "clean", "test"]
 
