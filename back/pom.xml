@@ -185,7 +185,7 @@
 						<id>spotbugs-check</id>
 						<phase>test</phase>
 						<goals>
-							<goal>spotbugs</goal>
+							<goal>check</goal>
 						</goals>
 					</execution>
 				</executions>
