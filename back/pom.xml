@@ -194,6 +194,16 @@
 				<groupId>com.diffplug.spotless</groupId>
 				<artifactId>spotless-maven-plugin</artifactId>
 				<version>1.31.1</version>
+				<executions>
+					<execution>
+						<id>spotless-check</id>
+						<phase>test</phase>
+						<goals>
+							<goal>apply</goal>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
