@@ -1,8 +1,9 @@
 # Membres du groupe Rocket
+* Manuel CABARCOS BAULINA
 * Marième KEITA
 * Malalatiana RANDRIANARIJAONA
 * Jonathan LAO-KAN
-* Manuel CABARCOS-BAULINA
+
 
 ### Lancement de l'application en local
 

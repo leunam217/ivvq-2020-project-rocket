@@ -5,7 +5,7 @@
         v-for="product in products"
         v-bind:key="product.productId"
       >
-        <ProductC :product="product()">
+        <ProductC :product="product">
         </ProductC>
       </v-col>
     </v-row>
@@ -27,7 +27,7 @@ import { MainModule } from "@/components/mainStoreModule";
   }
 })
 export default class Login extends Vue {
-  products: Product[] = MainModule.getState.products;
+  products: Product[] = MainModule.getState.shoppingCart.map(v => v.product);
   created() {
     MainModule.loadProducts();
   }

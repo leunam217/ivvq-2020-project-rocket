@@ -13,7 +13,7 @@
     </v-card-title>
 
     <v-card-subtitle>
-      {{ product.productPrice}} € Available: {{tempstock()}}
+      {{ product.productPrice}} € Available: {{tempstock}}
     </v-card-subtitle>
 
     <v-card-actions>
@@ -28,7 +28,7 @@
       >
         <v-icon dark>mdi-minus</v-icon>
       </v-btn>
-      <span>{{selectedQuantity}}</span>
+      <span>{{quantity}}</span>
       <v-btn
         class="mx-2"
         fab
@@ -46,6 +46,7 @@
         small
         dark
         color="orange"
+        @click="addToShoppingCart"
       >
         <v-icon dark>mdi-cart-plus</v-icon>
       </v-btn>
@@ -74,6 +75,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { Product } from "@/api/endpoints";
+import { MainModule } from "./mainStoreModule";
 
 @Component
 export default class ProductC extends Vue {
@@ -81,17 +83,26 @@ export default class ProductC extends Vue {
   @Prop({ required: true })
   product!: Product;
 
-  selectedQuantity = 0;
-  tempstock() {
-    return this.product.productStock - this.selectedQuantity;
+  get tempstock() {
+    const v = MainModule.shoppingCart.find(
+      v => v.product.productId === this.product.productId
+    );
+    const [quantity, stock] = [v?.quantity || 0, v?.product.productStock];
+    if (!quantity || !stock) return undefined;
+    return stock - quantity;
   }
 
-  plusClick() {
-    this.selectedQuantity++;
+  get quantity() {
+    return MainModule.shoppingCart.find(
+      v => v.product.productId === this.product.productId
+    )?.quantity;
   }
 
-  minusClick() {
-    this.selectedQuantity--;
-  }
+  plusClick = () => MainModule.addOneProduct(this.product.productId);
+
+  minusClick = () => MainModule.removeOneProduct(this.product.productId);
+
+  addToShoppingCart = () =>
+    MainModule.addToShoppingCart(this.product.productId);
 }
 </script>

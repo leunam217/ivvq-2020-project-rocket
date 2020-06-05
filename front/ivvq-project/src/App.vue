@@ -40,8 +40,5 @@ export default class App extends Vue {
     if (MainModule.getState.error) MainModule.cleanError();
     else RegisterModule.cleanError();
   }
-  created() {
-    MainModule.getTokenFromLocalStorage();
-  }
 }
 </script>
