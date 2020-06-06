@@ -14,7 +14,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Configuration
-@ConditionalOnProperty(name = "databaseHeroku")
 public class DatabaseConfig {
 
 	@Bean
