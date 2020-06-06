@@ -1,7 +1,7 @@
 import { VuexModule, Module, Mutation, Action, getModule } from "vuex-module-decorators";
 import store from '@/store';
-import { JwtResponse, AuthentificationForm, Product, ProductOrdered } from '@/api/endpoints';
-import { Result, Err, ProductApi, ShoppingCartApi } from '@/api/wrapper';
+import { JwtResponse, AuthentificationForm, Product, ProductOrdered, Order } from '@/api/endpoints';
+import { Result, Err, ProductApi, ShoppingCartApi, OrderApi } from '@/api/wrapper';
 import router from '@/router';
 
 export const moduleName = "Main";
@@ -13,6 +13,7 @@ export type stateType = {
     error?: any;
     success?: string;
     cardNumber: string;
+    previousOrders: Order[];
 };
 
 @Module({
@@ -28,7 +29,8 @@ export class MainModule2 extends VuexModule {
         error: undefined,
         authForm: { password: "", username: "" },
         cardNumber: "",
-        success: undefined
+        success: undefined,
+        previousOrders: []
     };
 
     /*login logic */
@@ -121,6 +123,25 @@ export class MainModule2 extends VuexModule {
 
     get shoppingCart() {
         return this.mState.shoppingCart.sort((a, b) => a.product.productName.localeCompare(b.product.productName));
+    }
+
+    /* order historic logic */
+
+    @Action
+    public async loadOrderHistory() {
+        if (this.getState.jwtResponse?.token === undefined) {
+            this.showError("You are not connected")
+        }
+        const result = await OrderApi.getOrderHistoric(this.getState.jwtResponse?.token as string)
+        switch (result.type) {
+            case "Err": this.showError(result.value); break;
+            case "Ok": this.loadOrderHistoricCompleted(result.value);
+        }
+    }
+
+    @Mutation
+    public loadOrderHistoricCompleted(orders: Order[]) {
+        this.mState.previousOrders = orders;
     }
 
     /* payment */

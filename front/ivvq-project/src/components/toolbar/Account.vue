@@ -20,17 +20,7 @@
     </template>
     <v-list>
       <template v-for="(item, index) in items">
-
-        <v-divider
-          v-if="item.divider"
-          :key="index"
-          :inset="item.inset"
-        ></v-divider>
-
-        <v-list-item
-          v-else
-          :key="item.title"
-        >
+        <v-list-item :key="item.title">
 
           <v-list-item-content>
             <v-list-item-title v-html="item.title"></v-list-item-title>
@@ -38,6 +28,11 @@
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
+        <v-divider
+          :key="index"
+          :inset="true"
+        ></v-divider>
+
       </template>
 
       <v-divider
@@ -61,24 +56,36 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { MainModule } from "../mainStoreModule";
+import { Order } from "../../api/endpoints";
 
 @Component
 export default class Account extends Vue {
   messages = 1;
   quantity = 1;
-  items = [
-    {
-      title: "Command 1",
-      info:
-        " &mdash; Rocket 1 (x5) &nbsp; &mdash; 1 000 000 000€ (x5) &mdash; 5 000 000 000€ <br/>" +
-        "\n &mdash; Rocket 2 (x5) &nbsp; &mdash; 1 000 000 000€ (x5) &mdash; 5 000 000 000€  <br/>" +
-        "\n &mdash; Toal = 10 000 000 000€ "
-    },
-    { divider: true, inset: true },
-    {
-      title: "blabla",
-      info: "idem"
-    }
-  ];
+
+  format(order: Order) {
+    const title = "Command " + order.orderId;
+    const infoList = order.products
+      .map(
+        p => `&mdash; ${p.productName} (x${p.count}) &nbsp; \
+      ${p.productPrice}€ (x${p.count}) &mdash; \
+      ${p.count * p.productPrice}€ <br/> `
+      )
+      .reduce((acc, curr) => acc + curr, "");
+    const infoTotalNumber = order.products.reduce(
+      (acc, curr) => acc + curr.count * curr.productPrice,
+      0
+    );
+    const infoTotal = `&mdash; Total = ${infoTotalNumber}€ `;
+    const info = infoList + infoTotal + "<br/> No code used";
+    return {
+      title,
+      info
+    };
+  }
+  get items() {
+    return MainModule.getState.previousOrders.map(this.format);
+  }
 }
 </script>

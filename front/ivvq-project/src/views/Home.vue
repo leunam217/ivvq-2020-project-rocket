@@ -31,6 +31,7 @@ export default class Login extends Vue {
     MainModule.getState.shoppingCart.map(v => v.product);
   created() {
     MainModule.loadProducts();
+    MainModule.loadOrderHistory();
   }
 }
 </script>

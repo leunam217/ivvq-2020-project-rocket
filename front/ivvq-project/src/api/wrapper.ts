@@ -1,4 +1,4 @@
-import { AxiosUserControllerClient, User, RestResponse, AxiosProductControllerClient, ProductOrdered, AxiosShoppingCartControllerClient, LuhnAlgorithm } from './endpoints'
+import { AxiosUserControllerClient, User, RestResponse, AxiosProductControllerClient, ProductOrdered, AxiosShoppingCartControllerClient, LuhnAlgorithm, AxiosOrderControllerClient } from './endpoints'
 import Axios from 'axios'
 
 const baseUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port
@@ -71,4 +71,13 @@ export class ShoppingCartApi {
         return moveError(this.client(token).finalCart(products)
             .then(() => this.client(token).checkoutCart(creditCard)))
     }
+}
+
+export class OrderApi {
+    static client = (token: string) => new AxiosOrderControllerClient(baseUrl, getAxiosWithAuthHeader(token))
+
+    static getOrderHistoric(token: string) {
+        return moveError(this.client(token).orderHistoric())
+    }
+
 }
