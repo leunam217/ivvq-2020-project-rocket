@@ -151,7 +151,7 @@ public class CartControllerTest extends AbstractRestControllerTest {
 		this.getMockMvc()
 				.perform(post("/cart/checkout", luhnAlgorithm, principal).contentType(MediaType.APPLICATION_JSON_UTF8)
 						.content(objectMapper.writeValueAsString(luhnAlgorithm)).principal(principal))
-				.andExpect(status().isOk());
+				.andExpect(status().isBadRequest());
 
 	}
 	@Test
