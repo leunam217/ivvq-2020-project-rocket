@@ -3,7 +3,7 @@
     <v-content>
       <div class="d-flex flex-column justify-space-between fill-height">
         <div>
-          <Toolbar> </Toolbar>
+          <Toolbar :mode="mode()"> </Toolbar>
         </div>
         <v-alert
           v-if="getError() !== undefined"
@@ -36,6 +36,7 @@ import { RegisterModule } from "./components/RegisterFormts";
 import { MainModule } from "./components/mainStoreModule";
 import { Component, Vue } from "vue-property-decorator";
 import Toolbar from "@/components/toolbar/Toolbar.vue";
+import { Role, Mode } from "./api/wrapper";
 
 @Component({
   components: {
@@ -53,5 +54,14 @@ export default class App extends Vue {
   onCloseSucces() {
     MainModule.cleanSuccess();
   }
+  mode = (): Mode => {
+    switch (MainModule.getState.jwtResponse?.role as Role) {
+      case "ROLE_CUSTOMER":
+        return "UserMode";
+      case "ROLE_SELLER":
+        return "AdminMode";
+    }
+    return "UserMode";
+  };
 }
 </script>

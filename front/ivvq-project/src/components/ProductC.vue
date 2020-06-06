@@ -83,14 +83,11 @@ export default class ProductC extends Vue {
   @Prop({ required: true })
   product!: Product;
 
-  tempstock() {
-    const v = MainModule.shoppingCart.find(
-      v => v.product.productId === this.product.productId
-    );
-    const [quantity, stock] = [v?.quantity || 0, v?.product.productStock];
-    if (quantity === undefined || stock === undefined) return undefined;
-    return stock - quantity;
-  }
+  @Prop({ required: true })
+  addProduct!: (id: any) => void;
+
+  @Prop({ required: true })
+  tempstockf!: (id: any) => void;
 
   quantity() {
     return MainModule.shoppingCart.find(
@@ -98,11 +95,12 @@ export default class ProductC extends Vue {
     )?.quantity;
   }
 
+  tempstock = () => this.tempstockf(this.product.productId);
+
   plusClick = () => MainModule.addOneProduct(this.product.productId);
 
   minusClick = () => MainModule.removeOneProduct(this.product.productId);
 
-  addToShoppingCart = () =>
-    MainModule.addToShoppingCart(this.product.productId);
+  addToShoppingCart = () => this.addProduct(this.product.productId);
 }
 </script>

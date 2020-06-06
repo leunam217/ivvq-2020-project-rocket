@@ -1,4 +1,4 @@
-import { AxiosUserControllerClient, User, RestResponse, AxiosProductControllerClient, ProductOrdered, AxiosShoppingCartControllerClient, LuhnAlgorithm, AxiosOrderControllerClient } from './endpoints'
+import { AxiosUserControllerClient, User, RestResponse, AxiosProductControllerClient, ProductOrdered, AxiosShoppingCartControllerClient, LuhnAlgorithm, AxiosOrderControllerClient, Product } from './endpoints'
 import Axios from 'axios'
 
 const baseUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port
@@ -7,6 +7,8 @@ export type Result<T, E> = Ok<T> | Err<E>
 
 // we need this because back-end role is stringly type todo update
 export type Role = "ROLE_CUSTOMER" | "ROLE_SELLER"
+
+export type Mode = "UserMode" | "AdminMode";
 
 export type Ok<T> = {
     type: "Ok";
@@ -61,6 +63,10 @@ export class ProductApi {
 
     static getProducts(token: string) {
         return moveError(this.client(token).findAllProduct());
+    }
+
+    static modifyProduct(token: string, productToUpdate: Product) {
+        return moveError(this.client(token).editProduct(productToUpdate.productId, productToUpdate))
     }
 }
 

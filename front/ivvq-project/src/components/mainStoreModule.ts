@@ -1,7 +1,7 @@
 import { VuexModule, Module, Mutation, Action, getModule } from "vuex-module-decorators";
 import store from '@/store';
 import { JwtResponse, AuthentificationForm, Product, ProductOrdered, Order } from '@/api/endpoints';
-import { Result, Err, ProductApi, ShoppingCartApi, OrderApi } from '@/api/wrapper';
+import { Result, Err, ProductApi, ShoppingCartApi, OrderApi, Mode, Role } from '@/api/wrapper';
 import router from '@/router';
 
 export const moduleName = "Main";
@@ -15,6 +15,16 @@ export type stateType = {
     cardNumber: string;
     previousOrders: Order[];
 };
+
+function getMode(this: MainModule2): Mode {
+    switch (this.mState.jwtResponse?.role as Role | string) {
+        case "ROLE_CUSTOMER":
+            return "UserMode";
+        case "ROLE_SELLER":
+            return "AdminMode";
+    }
+    return "UserMode";
+}
 
 @Module({
     store,
@@ -49,7 +59,7 @@ export class MainModule2 extends VuexModule {
     @Action({ rawError: true })
     public async loadProducts() {
         if (this.getState.jwtResponse?.token === undefined) {
-            this.showError("You are not connected")
+            this.showError("You are not connected"); return
         }
         const result = await ProductApi.getProducts(this.getState.jwtResponse?.token as string)
         switch (result.type) {
@@ -71,7 +81,7 @@ export class MainModule2 extends VuexModule {
             return;
         }
         const { quantity, product } = v
-        if (quantity >= product.productStock) {
+        if (quantity >= product.productStock && getMode.bind(this)() === "UserMode") {
             this.showError(
                 `There are not more ${product.productName} in sotck`
             );
@@ -90,7 +100,8 @@ export class MainModule2 extends VuexModule {
             return;
         }
         const { quantity } = v
-        if (quantity <= 0)
+        if ((quantity <= 0 && getMode.bind(this)() === "UserMode") ||
+            (quantity + v.product.productStock <= 0 && getMode.bind(this)() === "AdminMode"))
             return;
         this.mState.shoppingCart = this.mState.shoppingCart
             .filter(v => v.product.productId !== id)
@@ -121,6 +132,31 @@ export class MainModule2 extends VuexModule {
             .concat({ ...v, show: true })
     }
 
+    /* this function is for admin home */
+    @Action
+    public async addToStore(id: any) {
+        const v = this.mState.shoppingCart.find(v => id === v.product.productId);
+        if (v === undefined) {
+            this.showError("Unknown product");
+            return;
+        }
+        const token = this.getState.jwtResponse?.token;
+        if (token === undefined) {
+            this.showError("You are not connected");
+            return;
+        }
+        const modifiedProduct: Product = { ...v.product, productStock: v.quantity + v.product.productStock }
+        const result = await ProductApi.modifyProduct(token, modifiedProduct)
+        switch (result.type) {
+            case "Err": this.showError(result.value); break;
+            case "Ok": this.addToStoreCompleted(); this.loadProducts();
+        }
+    }
+
+    @Mutation
+    public addToStoreCompleted() {
+        this.mState.success = "The product has been updated";
+    }
     get shoppingCart() {
         return this.mState.shoppingCart.sort((a, b) => a.product.productName.localeCompare(b.product.productName));
     }
@@ -166,16 +202,6 @@ export class MainModule2 extends VuexModule {
     }
 
     /* general stuff */
-    @Mutation
-    public getStateFromLocalStorage() {
-        if (localStorage.getItem(tokenKey))
-            this.mState = JSON.parse(localStorage.getItem(tokenKey) as string)
-    }
-
-    @Mutation
-    public setStateToLocalStorage() {
-        localStorage.setItem(tokenKey, JSON.stringify(this.mState));
-    }
 
     @Mutation
     public cleanError() {
@@ -210,4 +236,6 @@ export class MainModule2 extends VuexModule {
         return this.mState;
     }
 }
+
+
 export const MainModule = getModule(MainModule2)

@@ -9,11 +9,11 @@
         v-on="on"
       >
         <v-badge
-          :content="messages"
-          :value="messages"
           color="red"
+          :content="0"
+          :value="0"
         >
-          <v-icon large>mdi-account</v-icon>
+          <v-icon large>fa-list</v-icon>
         </v-badge>
       </v-btn>
 
@@ -39,33 +39,24 @@
         :key="-1"
         :inset="true"
       ></v-divider>
-      <v-list-item>
-        <v-spacer></v-spacer>
-        <v-btn
-          class="mx-2"
-          large
-          dark
-          color="orange"
-        >Pay
-        </v-btn>
-        <v-spacer></v-spacer>
-      </v-list-item>
     </v-list>
   </v-menu>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 import { MainModule } from "../mainStoreModule";
 import { Order } from "../../api/endpoints";
+import { Mode } from "../../api/wrapper";
 
 @Component
 export default class Account extends Vue {
-  messages = 1;
-  quantity = 1;
+  @Prop({ required: true })
+  mode!: Mode;
 
   format(order: Order) {
-    const title = "Command " + order.orderId;
+    const by = this.mode === "AdminMode" ? "(by " + order.buyerEmail + ")" : "";
+    const title = "Command " + order.orderId + by;
     const infoList = order.products
       .map(
         p => `&mdash; ${p.productName} (x${p.count}) &nbsp; \

@@ -11,15 +11,16 @@
         <v-icon dark>fa-rocket</v-icon>
       </span></v-toolbar-title>
     <v-spacer></v-spacer>
-    <Account></Account>
-    <Cart></Cart>
+    <Account :mode="mode"></Account>
+    <Cart v-if="userMode()"></Cart>
   </v-toolbar>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 import Cart from "./Cart.vue";
 import Account from "./Account.vue";
+import { Mode } from "../../api/wrapper";
 
 @Component({
   components: {
@@ -28,12 +29,9 @@ import Account from "./Account.vue";
   }
 })
 export default class Toolbar extends Vue {
-  messages = 1;
-  items = [
-    { title: "Click Me" },
-    { title: "Click Me" },
-    { title: "Click Me" },
-    { title: "Click Me 2" }
-  ];
+  @Prop({ required: true })
+  mode!: Mode;
+  userMode = () => this.mode === "UserMode";
+  adminMode = () => this.mode === "AdminMode";
 }
 </script>
