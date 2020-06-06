@@ -15,6 +15,7 @@ import org.apache.commons.validator.routines.checkdigit.LuhnCheckDigit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -89,13 +90,16 @@ public class ShoppingCartController {
 		String resultLog = "";
 		if (!luhnAlgorithm.validateCreditCart(luhnAlgorithm.getCartNum())) {
 			resultLog = "the credit cart is not valid";
+			logger.info(resultLog);
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
 		} else {
 			resultLog = "Valid credit cart";
 			shoppingCartService.placeOrder(user);
+			logger.info(resultLog);
+			return ResponseEntity.ok(resultLog);
 		}
-		logger.info(resultLog);
 
-		return ResponseEntity.ok(resultLog);
 	}
 
 }

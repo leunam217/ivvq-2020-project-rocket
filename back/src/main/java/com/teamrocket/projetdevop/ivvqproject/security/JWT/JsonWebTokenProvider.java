@@ -15,8 +15,9 @@ import java.util.Date;
 public class JsonWebTokenProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(JsonWebTokenProvider.class);
-	@Value("${jwtSecret}")
-	private String jwtSecret;
+
+	@Value("${jwtRocket}")
+	private String jwtRocket;
 	@Value("${jwtExpiration}")
 	private int jwtExpiration;
 
@@ -25,12 +26,12 @@ public class JsonWebTokenProvider {
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		return Jwts.builder().setSubject(userDetails.getUsername()).setIssuedAt(new Date())
 				.setExpiration(new Date(new Date().getTime() + jwtExpiration * 1000))
-				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+				.signWith(SignatureAlgorithm.HS512, jwtRocket).compact();
 	}
 
 	public boolean validate(String token) {
 		try {
-			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+			Jwts.parser().setSigningKey(jwtRocket).parseClaimsJws(token);
 			return true;
 		} catch (Exception e) {
 			logger.error("JWT Authentication Failed");
@@ -39,6 +40,6 @@ public class JsonWebTokenProvider {
 	}
 
 	public String getUserAccount(String token) {
-		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+		return Jwts.parser().setSigningKey(jwtRocket).parseClaimsJws(token).getBody().getSubject();
 	}
 }
