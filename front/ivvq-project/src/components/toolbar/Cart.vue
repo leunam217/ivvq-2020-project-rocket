@@ -78,6 +78,7 @@
           large
           dark
           color="orange"
+          @click="pay"
         >Pay
         </v-btn>
         <v-spacer></v-spacer>
@@ -89,6 +90,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { MainModule } from "@/components/mainStoreModule";
+import router from "../../router";
 
 @Component
 export default class Cart extends Vue {
@@ -100,5 +102,7 @@ export default class Cart extends Vue {
   minus = MainModule.removeOneProduct;
 
   doDelete = MainModule.deleteFromShoppingCart;
+
+  pay = () => router.push("/pay");
 }
 </script>

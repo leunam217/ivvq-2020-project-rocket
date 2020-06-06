@@ -13,6 +13,14 @@
         >
           {{getError()}}
         </v-alert>
+        <v-alert
+          v-if="getSuccess() !== undefined"
+          type="success"
+          :dismissible="true"
+          @input="onCloseSucces"
+        >
+          {{getSuccess()}}
+        </v-alert>
         <v-spacer></v-spacer>
         <router-view>
         </router-view>
@@ -36,9 +44,14 @@ import Toolbar from "@/components/toolbar/Toolbar.vue";
 })
 export default class App extends Vue {
   getError = () => MainModule.getState.error || RegisterModule.getState.error;
+  getSuccess = () => MainModule.getState.success;
+
   onCloseError() {
     if (MainModule.getState.error) MainModule.cleanError();
     else RegisterModule.cleanError();
+  }
+  onCloseSucces() {
+    MainModule.cleanSuccess();
   }
 }
 </script>

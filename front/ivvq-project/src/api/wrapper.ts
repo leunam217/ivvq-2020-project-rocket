@@ -1,4 +1,4 @@
-import { AxiosUserControllerClient, User, RestResponse, AxiosProductControllerClient } from './endpoints'
+import { AxiosUserControllerClient, User, RestResponse, AxiosProductControllerClient, ProductOrdered, AxiosShoppingCartControllerClient, LuhnAlgorithm } from './endpoints'
 import Axios from 'axios'
 
 const baseUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port
@@ -54,9 +54,21 @@ function getAxiosWithAuthHeader(token: string) {
     return Axios.create({ headers: { "Authorization": `Bearer ${token}` } })
 }
 
+
+
 export class ProductApi {
-    private static client = (token: string) => new AxiosProductControllerClient(baseUrl, getAxiosWithAuthHeader(token))
+    static client = (token: string) => new AxiosProductControllerClient(baseUrl, getAxiosWithAuthHeader(token))
+
     static getProducts(token: string) {
         return moveError(this.client(token).findAllProduct());
+    }
+}
+
+export class ShoppingCartApi {
+    static client = (token: string) => new AxiosShoppingCartControllerClient(baseUrl, getAxiosWithAuthHeader(token))
+
+    static pay(token: string, products: ProductOrdered[], creditCard: LuhnAlgorithm) {
+        return moveError(this.client(token).finalCart(products)
+            .then(() => this.client(token).checkoutCart(creditCard)))
     }
 }

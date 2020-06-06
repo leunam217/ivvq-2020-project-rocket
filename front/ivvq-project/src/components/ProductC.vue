@@ -13,7 +13,7 @@
     </v-card-title>
 
     <v-card-subtitle>
-      {{ product.productPrice}} € Available: {{tempstock}}
+      {{ product.productPrice}} € Available: {{tempstock()}}
     </v-card-subtitle>
 
     <v-card-actions>
@@ -28,7 +28,7 @@
       >
         <v-icon dark>mdi-minus</v-icon>
       </v-btn>
-      <span>{{quantity}}</span>
+      <span>{{quantity()}}</span>
       <v-btn
         class="mx-2"
         fab
@@ -83,16 +83,16 @@ export default class ProductC extends Vue {
   @Prop({ required: true })
   product!: Product;
 
-  get tempstock() {
+  tempstock() {
     const v = MainModule.shoppingCart.find(
       v => v.product.productId === this.product.productId
     );
     const [quantity, stock] = [v?.quantity || 0, v?.product.productStock];
-    if (!quantity || !stock) return undefined;
+    if (quantity === undefined || stock === undefined) return undefined;
     return stock - quantity;
   }
 
-  get quantity() {
+  quantity() {
     return MainModule.shoppingCart.find(
       v => v.product.productId === this.product.productId
     )?.quantity;

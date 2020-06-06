@@ -1,7 +1,7 @@
 import { VuexModule, Module, Mutation, Action, getModule } from "vuex-module-decorators";
 import store from '@/store';
-import { JwtResponse, AuthentificationForm, Product } from '@/api/endpoints';
-import { Result, Err, ProductApi } from '@/api/wrapper';
+import { JwtResponse, AuthentificationForm, Product, ProductOrdered } from '@/api/endpoints';
+import { Result, Err, ProductApi, ShoppingCartApi } from '@/api/wrapper';
 import router from '@/router';
 
 export const moduleName = "Main";
@@ -11,6 +11,8 @@ export type stateType = {
     authForm: AuthentificationForm;
     shoppingCart: { quantity: number; product: Product; show: boolean }[];
     error?: any;
+    success?: string;
+    cardNumber: string;
 };
 
 @Module({
@@ -25,6 +27,8 @@ export class MainModule2 extends VuexModule {
         shoppingCart: [],
         error: undefined,
         authForm: { password: "", username: "" },
+        cardNumber: "",
+        success: undefined
     };
 
     /*login logic */
@@ -34,7 +38,7 @@ export class MainModule2 extends VuexModule {
         const result = await loginf(authForm);
         switch (result.type) {
             case "Err": this.setSate({ ...this.getState, error: result.value }); break;
-            case "Ok": this.setSate({ ...this.getState, jwtResponse: result.value }); this.setTokenToLocalStorage(result.value); router.push("/")
+            case "Ok": this.setSate({ ...this.getState, jwtResponse: result.value }); router.push("/")
         }
     }
 
@@ -116,18 +120,40 @@ export class MainModule2 extends VuexModule {
     }
 
     get shoppingCart() {
-        return this.mState.shoppingCart;
-    }
-    /* general stuff */
-    @Action({ rawError: true })
-    public getTokenFromLocalStorage() {
-        if (localStorage.getItem(tokenKey) !== null)
-            this.setSate({ ...this.getState, jwtResponse: JSON.parse(localStorage.getItem(tokenKey) as string) })
+        return this.mState.shoppingCart.sort((a, b) => a.product.productName.localeCompare(b.product.productName));
     }
 
-    @Action({ rawError: true })
-    public setTokenToLocalStorage(jwtResponse: Record<string, any>) {
-        localStorage.setItem(tokenKey, JSON.stringify(jwtResponse));
+    /* payment */
+    @Action
+    public async pay() {
+        const products: ProductOrdered[] = this.shoppingCart
+            .filter(v => v.show && v.quantity >= 1)
+            .map(v => ({
+                count: v.quantity,
+                id: 0,
+                ...v.product
+            }));
+        const token = this.getState.jwtResponse?.token;
+        if (!token) return;
+        const cartNum = this.getState.cardNumber;
+        const result = await ShoppingCartApi.pay(token, products, { cartNum })
+        switch (result.type) {
+            case "Err": this.showError(`An error happened : ${result.value}`); break;
+            case "Ok": this.showSuccess(" Your purchase happened!"); router.push("/")
+
+        }
+    }
+
+    /* general stuff */
+    @Mutation
+    public getStateFromLocalStorage() {
+        if (localStorage.getItem(tokenKey))
+            this.mState = JSON.parse(localStorage.getItem(tokenKey) as string)
+    }
+
+    @Mutation
+    public setStateToLocalStorage() {
+        localStorage.setItem(tokenKey, JSON.stringify(this.mState));
     }
 
     @Mutation
@@ -138,6 +164,16 @@ export class MainModule2 extends VuexModule {
     @Mutation
     public showError(error: any) {
         this.mState.error = error;
+    }
+
+    @Mutation
+    public showSuccess(s: any) {
+        this.mState.success = s;
+    }
+
+    @Mutation
+    public cleanSuccess() {
+        this.mState.success = undefined;
     }
 
     @Mutation
