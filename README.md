@@ -32,8 +32,8 @@ Lien vers Heroku
 
 * <https://rocket-ivvq-project.herokuapp.com/>
 
-Diagramme De Classes V1.0
-=========================
+Diagramme de classe
+====================
 
 ![ClassDiagram](https://user-images.githubusercontent.com/55536171/83962343-ddeeca00-a89c-11ea-8398-585cf1bf517d.png)
 
