@@ -73,7 +73,13 @@ export default class Account extends Vue {
     };
   }
   get items() {
-    return MainModule.getState.previousOrders.map(this.format);
+    return MainModule.getState.previousOrders
+      .filter(
+        v =>
+          MainModule.getState.jwtResponse?.type === "ROLLE_SELLER" ||
+          v.buyerName === MainModule.getState.jwtResponse?.name
+      )
+      .map(this.format);
   }
 }
 </script>

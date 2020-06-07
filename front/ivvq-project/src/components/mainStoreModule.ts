@@ -91,7 +91,7 @@ export class MainModule2 extends VuexModule {
     @Action({ rawError: true })
     public async loadProducts() {
         if (this.getState.jwtResponse?.token === undefined) {
-            this.showError("You are not connected"); return
+            this.showError("You are not connected"); router.push("/login"); return
         }
         const result = await ProductApi.getProducts(this.getState.jwtResponse?.token as string)
         switch (result.type) {
@@ -224,7 +224,7 @@ export class MainModule2 extends VuexModule {
             }));
         const token = this.getState.jwtResponse?.token;
         if (!token) return;
-        const cartNum = this.getState.cardNumber;
+        const cartNum = this.mState.cardNumber;
         if (!luhnValidate(cartNum)) {
             this.showError("Your credit card is not valid according to luhn's algorithm");
             return;
@@ -246,7 +246,6 @@ export class MainModule2 extends VuexModule {
 
     @Mutation
     public showError(error: any) {
-        router.push("/login");
         this.mState.error = error;
     }
 

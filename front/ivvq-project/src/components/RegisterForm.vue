@@ -96,7 +96,7 @@ export default class RegisterForm extends Vue {
       phone,
       id: 0,
       active: true,
-      role: role == "" ? "ROLE_CUSTOMER" : role
+      role: role === "" ? "ROLE_CUSTOMER" : role
     };
     RegisterModule.register({ user, registerf: this.registerf });
   }
