@@ -59,7 +59,7 @@ public class OrderController {
 	}
 
 	@GetMapping("/order/{id}")
-	public ResponseEntity showOneOrder(@PathVariable("id") Long orderId, Authentication authentication) {
+	public ResponseEntity<Order> showOneOrder(@PathVariable("id") Long orderId, Authentication authentication) {
 		boolean isCustomer = authentication.getAuthorities()
 				.contains(new SimpleGrantedAuthority(UserRoleEnum.ROLE_CUSTOMER.toString()));
 		Order order = orderService.findOne(orderId);

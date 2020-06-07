@@ -9,7 +9,7 @@
     <v-card-text>
       <v-form>
         <v-text-field
-          label="Username"
+          label="Email"
           prepend-icon="mdi-account-circle"
           @input="(username) => updateState({... state, username})"
         />

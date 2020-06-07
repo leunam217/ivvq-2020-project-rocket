@@ -1,3 +1,4 @@
+
  Rocket Shop Application
 =======================
 Application de commerce électronique développée pour effectuer des opérations de rôle d'utilisateur admin et client avec les interfaces utilisateurs respectives.
@@ -7,11 +8,12 @@ Application de commerce électronique développée pour effectuer des opération
  
  Membres du groupe Rocket
  ========================
- 
+
+* Manuel CABARCOS BAULINA
 * Marième KEITA
 * Malalatiana RANDRIANARIJAONA
 * Jonathan LAO-KAN
-* Manuel CABARCOS-BAULINA
+
 
 Build et Lancement de l'application en local
 ============================================
