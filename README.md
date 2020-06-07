@@ -35,7 +35,7 @@ Lien vers Heroku
 Diagramme De Classes V1.0
 =========================
 
- ![models](https://user-images.githubusercontent.com/55536171/79555437-e0eceb80-809f-11ea-9994-21374698a8c6.png)
+![ClassDiagram](https://user-images.githubusercontent.com/55536171/83962343-ddeeca00-a89c-11ea-8398-585cf1bf517d.png)
 
 Technologies utilisées
 ======================
