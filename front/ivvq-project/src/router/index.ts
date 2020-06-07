@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '@/views/Login.vue'
-import Product from '@/components/Product.vue'
 import Payment from '@/views/Payment.vue'
 import Register from '@/views/Register.vue'
 import { MainModule } from '@/components/mainStoreModule'
@@ -14,27 +13,21 @@ const routes: Array<RouteConfig> = [
     path: '/',
     name: 'Home',
     component: Home,
-    beforeEnter(_to, _from, next) {
-      console.log(MainModule.getState)
+    /*beforeEnter(_to, _from, next) {
       if (MainModule.getState.jwtResponse?.token === undefined)
         next({ name: 'Login' })
       else next()
-    }
+    }*/
   },
   {
     path: '/login',
     name: 'Login',
     component: Login,
-    beforeEnter(_to, _from, next) {
+    /*beforeEnter(_to, _from, next) {
       if (MainModule.getState.jwtResponse?.token !== undefined)
         next({ name: 'Home' })
       else next()
-    }
-  },
-  {
-    path: '/test',
-    name: 'Test',
-    component: Product
+    }*/
   },
   {
     path: '/pay',

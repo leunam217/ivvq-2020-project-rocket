@@ -9,28 +9,18 @@
         v-on="on"
       >
         <v-badge
-          :content="messages"
-          :value="messages"
           color="red"
+          :content="0"
+          :value="0"
         >
-          <v-icon large>mdi-account</v-icon>
+          <v-icon large>fa-list</v-icon>
         </v-badge>
       </v-btn>
 
     </template>
     <v-list>
       <template v-for="(item, index) in items">
-
-        <v-divider
-          v-if="item.divider"
-          :key="index"
-          :inset="item.inset"
-        ></v-divider>
-
-        <v-list-item
-          v-else
-          :key="item.title"
-        >
+        <v-list-item :key="item.title">
 
           <v-list-item-content>
             <v-list-item-title v-html="item.title"></v-list-item-title>
@@ -38,47 +28,55 @@
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
+        <v-divider
+          :key="index"
+          :inset="true"
+        ></v-divider>
+
       </template>
 
       <v-divider
         :key="-1"
         :inset="true"
       ></v-divider>
-      <v-list-item>
-        <v-spacer></v-spacer>
-        <v-btn
-          class="mx-2"
-          large
-          dark
-          color="orange"
-        >Pay
-        </v-btn>
-        <v-spacer></v-spacer>
-      </v-list-item>
     </v-list>
   </v-menu>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
+import { MainModule } from "../mainStoreModule";
+import { Order } from "../../api/endpoints";
+import { Mode } from "../../api/wrapper";
 
 @Component
 export default class Account extends Vue {
-  messages = 1;
-  quantity = 1;
-  items = [
-    {
-      title: "Command 1",
-      info:
-        " &mdash; Rocket 1 (x5) &nbsp; &mdash; 1 000 000 000€ (x5) &mdash; 5 000 000 000€ <br/>" +
-        "\n &mdash; Rocket 2 (x5) &nbsp; &mdash; 1 000 000 000€ (x5) &mdash; 5 000 000 000€  <br/>" +
-        "\n &mdash; Toal = 10 000 000 000€ "
-    },
-    { divider: true, inset: true },
-    {
-      title: "blabla",
-      info: "idem"
-    }
-  ];
+  @Prop({ required: true })
+  mode!: Mode;
+
+  format(order: Order) {
+    const by = this.mode === "AdminMode" ? "(by " + order.buyerEmail + ")" : "";
+    const title = "Command " + order.orderId + by;
+    const infoList = order.products
+      .map(
+        p => `&mdash; ${p.productName} (x${p.count}) &nbsp; \
+      ${p.productPrice}€ (x${p.count}) &mdash; \
+      ${p.count * p.productPrice}€ <br/> `
+      )
+      .reduce((acc, curr) => acc + curr, "");
+    const infoTotalNumber = order.products.reduce(
+      (acc, curr) => acc + curr.count * curr.productPrice,
+      0
+    );
+    const infoTotal = `&mdash; Total = ${infoTotalNumber}€ `;
+    const info = infoList + infoTotal + "<br/> No code used";
+    return {
+      title,
+      info
+    };
+  }
+  get items() {
+    return MainModule.getState.previousOrders.map(this.format);
+  }
 }
 </script>

@@ -85,7 +85,6 @@ export default class RegisterForm extends Vue {
       active: true,
       role: "ROLE_CUSTOMER"
     };
-    console.log(this.registerf);
     RegisterModule.register({ user, registerf: this.registerf });
   }
 }
