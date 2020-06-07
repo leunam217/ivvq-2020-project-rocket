@@ -39,6 +39,12 @@
           :value="state.address"
           @input="(v) => updateState({...state,address:v})"
         />
+        <v-text-field
+          label="Role (leave empty if client)"
+          prepend-icon="mdi-home"
+          :value="state.address"
+          @input="(v) => updateState({...state,role:v})"
+        />
       </v-form>
     </v-card-text>
     <v-divider></v-divider>
@@ -74,7 +80,14 @@ export default class RegisterForm extends Vue {
   }
 
   doRegister() {
-    const { email, password, name, address, phone } = RegisterModule.getState;
+    const {
+      email,
+      password,
+      name,
+      address,
+      phone,
+      role
+    } = RegisterModule.getState;
     const user: User = {
       email,
       password,
@@ -83,7 +96,7 @@ export default class RegisterForm extends Vue {
       phone,
       id: 0,
       active: true,
-      role: "ROLE_CUSTOMER"
+      role: role == "" ? "ROLE_CUSTOMER" : role
     };
     RegisterModule.register({ user, registerf: this.registerf });
   }

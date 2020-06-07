@@ -43,11 +43,6 @@ const routes: Array<RouteConfig> = [
     path: '/register',
     name: 'Register',
     component: Register,
-    beforeEnter(_to, _from, next) {
-      if (MainModule.getState.jwtResponse?.token === undefined)
-        next({ name: 'login' })
-      else next()
-    }
   },
   {
     path: '/about',

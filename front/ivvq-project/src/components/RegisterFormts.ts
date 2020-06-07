@@ -13,6 +13,7 @@ export type stateType = {
     address: string;
     error?: any;
     registred: boolean;
+    role: string;
 };
 
 @Module({
@@ -29,7 +30,8 @@ export class Register extends VuexModule {
         phone: "",
         address: "",
         error: undefined,
-        registred: false
+        registred: false,
+        role: ""
     };
 
     @Mutation
