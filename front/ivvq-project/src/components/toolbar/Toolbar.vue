@@ -12,7 +12,7 @@
       </span></v-toolbar-title>
     <v-spacer></v-spacer>
     <Account :mode="mode"></Account>
-    <Cart v-if="userMode()"></Cart>
+    <Cart></Cart>
   </v-toolbar>
 </template>
 
