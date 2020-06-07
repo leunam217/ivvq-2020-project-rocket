@@ -13,7 +13,7 @@
           :content="0"
           :value="0"
         >
-          <v-icon large>mdi-info</v-icon>
+          <v-icon large>mdi-account</v-icon>
         </v-badge>
       </v-btn>
 
@@ -64,11 +64,8 @@ export default class Account extends Vue {
       ${p.count * p.productPrice}€ <br/> `
       )
       .reduce((acc, curr) => acc + curr, "");
-    const infoTotalNumber = order.products.reduce(
-      (acc, curr) => acc + curr.count * curr.productPrice,
-      0
-    );
-    const infoTotal = `&mdash; Total = ${infoTotalNumber}€ `;
+
+    const infoTotal = `&mdash; Total = ${order.orderAmount}€ `;
     const info = infoList + infoTotal + "<br/> No code used";
     return {
       title,
