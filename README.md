@@ -24,7 +24,7 @@ Lancement de l'environnement des test
 ======================================
 
 ```sh
-$ docker-compose up testting-env
+$ docker-compose up testing-env
 ```
 
 Lien vers Heroku
