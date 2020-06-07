@@ -38,9 +38,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { MainModule } from "./mainStoreModule";
+import { MainModule, stateType } from "./mainStoreModule";
 import { ProductOrdered } from "../api/endpoints";
-import { stateType, RegisterModule } from "./RegisterFormts";
 
 @Component
 export default class LoginForm extends Vue {
@@ -67,7 +66,7 @@ export default class LoginForm extends Vue {
   }
 
   updateState(state: stateType) {
-    RegisterModule.updateSate(state);
+    MainModule.updateSate(state);
   }
 
   pay() {
