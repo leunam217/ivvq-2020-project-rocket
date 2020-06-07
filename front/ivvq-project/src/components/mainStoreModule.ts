@@ -26,6 +26,38 @@ function getMode(this: MainModule2): Mode {
     return "UserMode";
 }
 
+/* luhn_checksum
+ * Implement the Luhn algorithm to calculate the Luhn check digit.
+ * Return the check digit.
+ */
+function luhn_checksum(code: any) {
+    var len = code.length
+    var parity = len % 2
+    var sum = 0
+    for (var i = len - 1; i >= 0; i--) {
+        var d = parseInt(code.charAt(i))
+        if (i % 2 == parity) { d *= 2 }
+        if (d > 9) { d -= 9 }
+        sum += d
+    }
+    return sum % 10
+}
+
+/* luhn_caclulate
+ * Return a full code (including check digit), from the specified partial code (without check digit).
+ */
+function luhn_caclulate(partcode: any) {
+    var checksum = luhn_checksum(partcode + "0")
+    return checksum == 0 ? 0 : 10 - checksum
+}
+
+/* luhn_validate
+ * Return true if specified code (with check digit) is valid.
+ */
+function luhn_validate(fullcode: any) {
+    return luhn_checksum(fullcode) == 0
+}
+
 @Module({
     store,
     namespaced: true,
@@ -193,6 +225,10 @@ export class MainModule2 extends VuexModule {
         const token = this.getState.jwtResponse?.token;
         if (!token) return;
         const cartNum = this.getState.cardNumber;
+        if (!luhn_validate(cartNum)) {
+            this.showError("Your credit card is not valid according to luhn's algorithm");
+            return;
+        }
         const result = await ShoppingCartApi.pay(token, products, { cartNum })
         switch (result.type) {
             case "Err": this.showError(`An error happened : ${result.value}`); break;
