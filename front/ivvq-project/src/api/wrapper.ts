@@ -82,8 +82,15 @@ export class ShoppingCartApi {
 export class OrderApi {
     static client = (token: string) => new AxiosOrderControllerClient(baseUrl, getAxiosWithAuthHeader(token))
 
-    static getOrderHistoric(token: string) {
-        return moveError(this.client(token).orderHistoric())
+    static async getOrderHistoric(token: string) {
+        console.log("lol");
+        const orders = await this.client(token).orderHistoric().then(v => Ok(v.data)).catch(e => Err(e));
+        if (orders.type === "Err")
+            return orders;
+        return Promise.all(orders.value.map(o => this.client(token).showOneOrder(o.orderId)))
+            .then(v => Ok(v.map(va => va.data)))
+            .catch(e => Err(e))
     }
+
 
 }
