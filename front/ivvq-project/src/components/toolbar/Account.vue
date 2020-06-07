@@ -13,7 +13,7 @@
           :content="0"
           :value="0"
         >
-          <v-icon large>fa-list</v-icon>
+          <v-icon large>info</v-icon>
         </v-badge>
       </v-btn>
 

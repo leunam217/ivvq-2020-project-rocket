@@ -210,6 +210,7 @@ export class MainModule2 extends VuexModule {
 
     @Mutation
     public showError(error: any) {
+        router.push("/login");
         this.mState.error = error;
     }
 
