@@ -61,7 +61,7 @@ export default class App extends Vue {
       case "ROLE_SELLER":
         return "AdminMode";
     }
-    return "UserMode";
+    return "AdminMode";
   };
 }
 </script>

@@ -30,12 +30,12 @@ function getMode(this: MainModule2): Mode {
  * Implement the Luhn algorithm to calculate the Luhn check digit.
  * Return the check digit.
  */
-function luhn_checksum(code: any) {
-    var len = code.length
-    var parity = len % 2
-    var sum = 0
-    for (var i = len - 1; i >= 0; i--) {
-        var d = parseInt(code.charAt(i))
+function luhnChecksum(code: any) {
+    const len = code.length
+    const parity = len % 2
+    let sum = 0
+    for (let i = len - 1; i >= 0; i--) {
+        let d = parseInt(code.charAt(i))
         if (i % 2 == parity) { d *= 2 }
         if (d > 9) { d -= 9 }
         sum += d
@@ -46,16 +46,16 @@ function luhn_checksum(code: any) {
 /* luhn_caclulate
  * Return a full code (including check digit), from the specified partial code (without check digit).
  */
-function luhn_caclulate(partcode: any) {
-    var checksum = luhn_checksum(partcode + "0")
+function luhnCaclulate(partcode: any) {
+    const checksum = luhnChecksum(partcode + "0")
     return checksum == 0 ? 0 : 10 - checksum
 }
 
 /* luhn_validate
  * Return true if specified code (with check digit) is valid.
  */
-function luhn_validate(fullcode: any) {
-    return luhn_checksum(fullcode) == 0
+function luhnValidate(fullcode: any) {
+    return luhnChecksum(fullcode) == 0
 }
 
 @Module({
@@ -225,7 +225,7 @@ export class MainModule2 extends VuexModule {
         const token = this.getState.jwtResponse?.token;
         if (!token) return;
         const cartNum = this.getState.cardNumber;
-        if (!luhn_validate(cartNum)) {
+        if (!luhnValidate(cartNum)) {
             this.showError("Your credit card is not valid according to luhn's algorithm");
             return;
         }
