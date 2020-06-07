@@ -13,31 +13,16 @@ const routes: Array<RouteConfig> = [
     path: '/',
     name: 'Home',
     component: Home,
-    beforeEnter(_to, _from, next) {
-      if (MainModule.getState.jwtResponse?.token === undefined)
-        next({ name: 'login' })
-      else next()
-    }
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login,
-    beforeEnter(_to, _from, next) {
-      if (MainModule.getState.jwtResponse?.token !== undefined)
-        next({ name: '/' })
-      else next()
-    }
+    component: Login
   },
   {
     path: '/pay',
     name: 'Pay',
-    component: Payment,
-    beforeEnter(_to, _from, next) {
-      if (MainModule.getState.jwtResponse?.token === undefined)
-        next({ name: 'login' })
-      else next()
-    }
+    component: Payment
   },
   {
     path: '/register',

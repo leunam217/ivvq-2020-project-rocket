@@ -21,6 +21,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import Cart from "./Cart.vue";
 import Account from "./Account.vue";
 import { Mode } from "../../api/wrapper";
+import { MainModule } from "../mainStoreModule";
 
 @Component({
   components: {
@@ -31,7 +32,7 @@ import { Mode } from "../../api/wrapper";
 export default class Toolbar extends Vue {
   @Prop({ required: true })
   mode!: Mode;
-  userMode = () => this.mode === "UserMode";
+  userMode = () => MainModule.mState.jwtResponse?.role === "ROLE_CUSTOMER";
   adminMode = () => this.mode === "AdminMode";
 }
 </script>
